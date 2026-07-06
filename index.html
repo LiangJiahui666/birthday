@@ -59,7 +59,10 @@
 
   <style>
     html { scroll-behavior: smooth; }
-    body { background-color: #FEFAF6; color: #4A3728; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      background-color: #FEFAF6; color: #4A3728; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+    }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #FEFAF6; }
     ::-webkit-scrollbar-thumb { background: #C4956A; border-radius: 10px; }
@@ -79,6 +82,7 @@
     .hero-section {
       position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
       background-size: cover; background-position: center; background-repeat: no-repeat;
+      -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
     }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35)); }
 
@@ -161,6 +165,7 @@
     .grid-item {
       position: relative; overflow: hidden; border-radius: 12px; cursor: pointer;
       aspect-ratio: 1; transition: transform 0.3s;
+      -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
     }
     .grid-item:hover { transform: scale(1.03); }
     .grid-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -710,20 +715,17 @@
       }
     });
 
-    // ==================== 手机端双击触发生日歌彩蛋 ====================
+    // ==================== 手机端双击 → 烟花（不播音乐，不与右下角冲突） ====================
     let lastTap = 0;
     document.addEventListener('touchend', (e) => {
-      // 忽略交互元素上的双击
-      if (e.target.closest('button, a, .grid-item, .timeline-card, .music-btn, #cakeBtn, #footerHeart, .lightbox')) return;
-
+      if (e.target.closest('button, a, .grid-item, .timeline-card, .music-btn, #cakeBtn, #footerHeart, .lightbox, #signatureBox')) return;
       const now = Date.now();
       if (now - lastTap < 400) {
-        const toast = document.getElementById('birthdayToast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-        birthdaySongAudio.currentTime = 0;
-        birthdaySongAudio.play().catch(() => {});
-        confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b', '#ffd93d'] });
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
+        setTimeout(() => {
+          confetti({ particleCount: 60, spread: 120, origin: { y: 0.4, x: 0.3 }, colors: ['#ff6b6b', '#ffd93d'] });
+          confetti({ particleCount: 60, spread: 120, origin: { y: 0.4, x: 0.7 }, colors: ['#C4956A', '#a0e7e5'] });
+        }, 200);
       }
       lastTap = now;
     });
@@ -764,16 +766,20 @@
 
     // ==================== 彩蛋1：摇一摇 → 满屏星星 ✨ ====================
     let lastShakeTime = 0;
-    let shakeThreshold = 15;
-    if (window.DeviceMotionEvent) {
+    const shakeThreshold = 10;
+
+    function enableShakeListener() {
       window.addEventListener('devicemotion', (e) => {
-        const acc = e.accelerationIncludingGravity;
-        if (!acc) return;
-        const magnitude = Math.sqrt(acc.x * acc.x + acc.y * acc.y + acc.z * acc.z);
+        const acc = e.accelerationIncludingGravity || e.acceleration;
+        if (!acc || acc.x === null) return;
+        const magnitude = Math.sqrt(
+          (acc.x || 0) * (acc.x || 0) +
+          (acc.y || 0) * (acc.y || 0) +
+          (acc.z || 0) * (acc.z || 0)
+        );
         const now = Date.now();
-        if (magnitude > shakeThreshold && now - lastShakeTime > 3000) {
+        if (magnitude > shakeThreshold && now - lastShakeTime > 2500) {
           lastShakeTime = now;
-          // 金色星星从底部升起
           confetti({
             particleCount: 80,
             spread: 100,
@@ -784,25 +790,46 @@
             shapes: ['star'],
             scalar: 1.5,
           });
-          // 显示提示
           const toast = document.getElementById('easterToast');
           document.getElementById('easterMsg').textContent = '✨ 抓到你了！愿你的每一天都闪闪发光 ✨';
           toast.classList.add('show');
           setTimeout(() => toast.classList.remove('show'), 2500);
         }
-      });
+      }, { passive: true });
+    }
+
+    if (window.DeviceMotionEvent) {
+      // iOS 13+ 需要主动请求权限
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        // 静默尝试：在首次用户手势后自动请求
+        document.addEventListener('click', function requestShakePerm() {
+          DeviceMotionEvent.requestPermission()
+            .then(state => { if (state === 'granted') enableShakeListener(); })
+            .catch(() => {});
+          document.removeEventListener('click', requestShakePerm);
+        }, { once: true });
+        document.addEventListener('touchend', function requestShakePermTouch() {
+          DeviceMotionEvent.requestPermission()
+            .then(state => { if (state === 'granted') enableShakeListener(); })
+            .catch(() => {});
+          document.removeEventListener('touchend', requestShakePermTouch);
+        }, { once: true });
+      } else {
+        // Android 或旧版 iOS，直接启用
+        enableShakeListener();
+      }
     }
 
     // ==================== 彩蛋2：长按照片 → 小心心 💕 ====================
     let longPressTimer;
-    const heroSection = document.querySelector('.hero-section');
-    if (heroSection) {
-      heroSection.addEventListener('touchstart', (e) => {
+    const heroSectionEl = document.querySelector('.hero-section');
+    if (heroSectionEl) {
+      heroSectionEl.addEventListener('contextmenu', (e) => e.preventDefault());
+      heroSectionEl.addEventListener('touchstart', (e) => {
         longPressTimer = setTimeout(() => {
-          const touch = e.touches[0];
+          const touch = e.touches[0] || e.changedTouches[0];
           const x = touch ? touch.clientX / window.innerWidth : 0.5;
           const y = touch ? touch.clientY / window.innerHeight : 0.5;
-          // 从手指位置发射小心心
           confetti({
             particleCount: 30,
             spread: 50,
@@ -816,8 +843,8 @@
           clearTimeout(longPressTimer);
         }, 1500);
       });
-      heroSection.addEventListener('touchend', () => clearTimeout(longPressTimer));
-      heroSection.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+      heroSectionEl.addEventListener('touchend', () => clearTimeout(longPressTimer));
+      heroSectionEl.addEventListener('touchmove', () => clearTimeout(longPressTimer));
     }
 
     // ==================== 彩蛋3：滑动到底部 → 烟花 🎆 ====================
@@ -870,7 +897,8 @@
     // 给照片卡片绑定长按事件
     document.querySelectorAll('#photoGrid .grid-item').forEach((item, index) => {
       let photoLongPress;
-      item.addEventListener('touchstart', () => {
+      item.addEventListener('contextmenu', (e) => e.preventDefault());
+      item.addEventListener('touchstart', (e) => {
         photoLongPress = setTimeout(() => {
           const memory = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
           document.getElementById('easterMsg').textContent = memory;
