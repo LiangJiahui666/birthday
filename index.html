@@ -99,17 +99,63 @@
       position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #E8D5C4, #C4956A, #E8D5C4);
       transform: translateX(-50%);
     }
-    .timeline-dot {
-      width: 16px; height: 16px; border-radius: 50%; background: #C4956A; flex-shrink: 0;
-      box-shadow: 0 0 0 6px rgba(196,149,106,0.15); z-index: 1; position: relative;
+    .timeline-marker {
+      position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
+      width: 36px; height: 36px; border-radius: 50%; background: #FEFAF6;
+      border: 2px solid #C4956A; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; z-index: 1; box-shadow: 0 2px 8px rgba(196,149,106,0.12);
     }
     .timeline-card {
       background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border-top: 3px solid #C4956A;
     }
     .timeline-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
     .timeline-card.expanded .timeline-detail { max-height: 600px; opacity: 1; margin-top: 16px; }
     .timeline-detail { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.4s ease, margin 0.4s ease; }
+
+    /* 新模块：数字卡片 */
+    .number-card {
+      background: white; border-radius: 16px; padding: 20px 16px; text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.3s;
+    }
+    .number-card:hover { transform: translateY(-4px); }
+
+    /* 新模块：横向滑动便签 */
+    .notes-scroll {
+      display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; padding: 8px 4px 20px;
+    }
+    .notes-scroll::-webkit-scrollbar { display: none; }
+    .note-card {
+      flex: 0 0 260px; scroll-snap-align: center; background: #FFF9F0;
+      border-radius: 16px; padding: 24px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      position: relative; min-height: 160px; display: flex; align-items: center;
+    }
+    .note-card::before {
+      content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+      width: 48px; height: 8px; background: #C4956A; border-radius: 4px; opacity: 0.5;
+    }
+    .note-card:nth-child(odd) { background: #FFF9F0; }
+    .note-card:nth-child(even) { background: #F5EDE3; }
+
+    /* 新模块：信封 */
+    .envelope {
+      background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%);
+      border-radius: 20px; padding: 40px 28px; position: relative; overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08); text-align: center; cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .envelope:hover { transform: scale(1.02); }
+    .envelope-flap {
+      position: absolute; top: 0; left: 0; right: 0; height: 0;
+      border-left: 50vw solid transparent; border-right: 50vw solid transparent;
+      border-top: 40px solid #E8D5C4; transition: transform 0.5s ease;
+      transform-origin: top center;
+    }
+    .envelope.opened .envelope-flap { transform: rotateX(180deg); }
+    .envelope-seal { display: inline-block; background: #C4956A; color: white; padding: 6px 20px; border-radius: 20px; font-size: 14px; margin-bottom: 16px; }
+    .envelope-content { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.5s ease; }
+    .envelope.opened .envelope-content { max-height: 400px; opacity: 1; margin-top: 20px; }
 
     /* 照片九宫格 */
     .grid-item {
@@ -158,11 +204,12 @@
 
     /* 响应式调整 */
     @media (max-width: 768px) {
-      .timeline-line { left: 20px; }
-      .timeline-card { margin-left: 40px !important; margin-right: 0 !important; }
-      /* 手机端左右交替改为统一左侧 */
+      .timeline-line { left: 16px; }
+      .timeline-marker { left: 16px; width: 28px; height: 28px; font-size: 12px; top: 10px; }
+      .timeline-card { margin-left: 48px !important; margin-right: 8px !important; }
       .timeline-container > div { flex-direction: row !important; justify-content: flex-start !important; }
       .timeline-container > div > .timeline-card { width: 100% !important; text-align: left !important; }
+      .envelope-flap { border-left-width: 45vw; border-right-width: 45vw; }
     }
   </style>
 </head>
@@ -227,6 +274,7 @@
 
       <!-- 节点1：领证 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-end;">
+        <div class="timeline-marker">📜</div>
         <div class="timeline-card flex-1 max-w-md animate-slide-right" onclick="toggleTimelineCard(this)"
           style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">
           <div class="flex items-center gap-3">
@@ -243,12 +291,11 @@
             </p>
           </div>
         </div>
-        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
       </div>
 
       <!-- 节点2：婚礼 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-start;">
-        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
+        <div class="timeline-marker">💒</div>
         <div class="timeline-card flex-1 max-w-md animate-slide-left"
           onclick="toggleTimelineCard(this)" style="animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards;">
           <div class="flex items-center gap-3">
@@ -269,6 +316,7 @@
 
       <!-- 节点3：宝宝出生 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-end;">
+        <div class="timeline-marker">👶</div>
         <div class="timeline-card flex-1 max-w-md animate-slide-right"
           onclick="toggleTimelineCard(this)" style="animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards;">
           <div class="flex items-center gap-3">
@@ -285,12 +333,11 @@
             </p>
           </div>
         </div>
-        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
       </div>
 
       <!-- 节点4：30岁生日 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-start;">
-        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
+        <div class="timeline-marker">🎂</div>
         <div class="timeline-card flex-1 max-w-md animate-slide-left"
           onclick="toggleTimelineCard(this)" style="animation-delay: 0.7s; opacity: 0; animation-fill-mode: forwards;">
           <div class="flex items-center gap-3">
@@ -319,7 +366,7 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" id="photoGrid">
-      <!-- 9张占位照片，点击后灯箱查看 -->
+      <!-- 12张占位照片，手机2列整齐、桌面3列整齐 -->
       <div class="grid-item" onclick="openLightbox(0)"><img src="images/06-daily-1.jpg" alt="日常碎片" loading="lazy" /></div>
       <div class="grid-item" onclick="openLightbox(1)"><img src="images/07-daily-2.jpg" alt="日常碎片" loading="lazy" /></div>
       <div class="grid-item" onclick="openLightbox(2)"><img src="images/08-daily-3.jpg" alt="日常碎片" loading="lazy" /></div>
@@ -329,6 +376,9 @@
       <div class="grid-item" onclick="openLightbox(6)"><img src="images/12-daily-7.jpg" alt="日常碎片" loading="lazy" /></div>
       <div class="grid-item" onclick="openLightbox(7)"><img src="images/13-daily-8.jpg" alt="日常碎片" loading="lazy" /></div>
       <div class="grid-item" onclick="openLightbox(8)"><img src="images/14-daily-9.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(9)"><img src="images/15-daily-10.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(10)"><img src="images/16-daily-11.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(11)"><img src="images/17-daily-12.jpg" alt="日常碎片" loading="lazy" /></div>
     </div>
 
     <!-- 灯箱 -->
@@ -371,9 +421,95 @@
     </div>
 
     <!-- 落款 -->
-    <div class="mt-16 text-warm-muted text-sm leading-relaxed">
+    <div class="mt-16 text-warm-muted text-sm leading-relaxed" id="signatureBox">
       <p>爱你的老公 &amp; 你的小男子汉</p>
       <p>2026.07.22</p>
+    </div>
+  </section>
+
+  <!-- ==================== 模块A：我们的生活数字 ==================== -->
+  <section class="py-20 px-4 md:px-8 max-w-3xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📊 我们的生活数字</h2>
+      <p class="text-warm-muted">有些数字，只属于我们。</p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="number-card">
+        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="babyMonths">--</p>
+        <p class="text-xs text-warm-muted mt-2">宝宝来到世界的<br/>月数</p>
+      </div>
+      <div class="number-card">
+        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="totalMeals">--</p>
+        <p class="text-xs text-warm-muted mt-2">一起吃过<br/>大约的饭数</p>
+      </div>
+      <div class="number-card">
+        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="nightFeeds">--</p>
+        <p class="text-xs text-warm-muted mt-2">你大概起来<br/>喂奶的次数</p>
+      </div>
+      <div class="number-card">
+        <p class="text-3xl md:text-4xl font-bold text-warm-accent">+1</p>
+        <p class="text-xs text-warm-muted mt-2">我们的家庭人口<br/>2 → 3</p>
+      </div>
+      <div class="number-card">
+        <p class="text-3xl md:text-4xl font-bold text-warm-accent">∞</p>
+        <p class="text-xs text-warm-muted mt-2">未来还有<br/>无限可能</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 模块B：我偷偷记住的事 ==================== -->
+  <section class="py-20 px-4 max-w-4xl mx-auto" style="background: linear-gradient(to bottom, #FEFAF6, #FFF9F0);">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">👀 我偷偷记住的事</h2>
+      <p class="text-warm-muted text-sm">有些小事，你可能以为我没注意到。← 左右滑动 →</p>
+    </div>
+    <div class="notes-scroll" id="notesScroll">
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你总是把宝宝的衣服叠成小豆腐块，整整齐齐码在小柜子里。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你喝奶茶一定要加珍珠，从来不加椰果。点错了你会默默喝完，但下次还是会说"珍珠"。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你生气的时候先不说话，自己消化完了再来找我。我在旁边大气都不敢出。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你给家里每个人都买了各自的专属拖鞋——你的粉色，我的灰色，宝宝的迷你款。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你哄宝宝睡觉的时候会轻声哼歌，旋律每次都差不多，但调子永远不准。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你每次出门前要在镜子前站很久，最后转一圈问我"还行吗"。其实你永远最美。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你手机相册里宝宝的照片比你自己多一百倍，但偶尔翻到自己的自拍会偷偷删掉。</p></div>
+      <div class="note-card"><p class="text-warm-dark leading-relaxed">你做的番茄鸡蛋面是全天下最好吃的。每次加班回家，闻到那个味道就觉得到家了。</p></div>
+    </div>
+  </section>
+
+  <!-- ==================== 模块C：明年今日 ==================== -->
+  <section class="py-20 px-6 max-w-lg mx-auto">
+    <div class="envelope" id="envelopeCard" onclick="toggleEnvelope()">
+      <div class="envelope-seal">📮 来自 2026.07.22 的一封信</div>
+      <p class="text-xs text-warm-muted mb-4">将于 2027.07.22 开启</p>
+      <div class="envelope-content">
+        <div class="font-handwritten">
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            亲爱的老婆：
+          </p>
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            明年的今天，当我们再次打开这个页面时，<br/>不知又会是怎样的光景呢？
+          </p>
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            宝宝可能已经会跑会跳，<br/>追在你后面喊"妈妈"了。
+          </p>
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            我们可能换了新家，<br/>或者去了计划好久的那趟旅行。
+          </p>
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            但有一件事我敢打包票——<br/>我仍然会像今天一样，
+          </p>
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            坐在这里给你写新的代码，<br/>拍你吃饭时沾在嘴角的米粒，
+          </p>
+          <p class="text-lg leading-loose mb-4 text-warm-dark">
+            在你累的时候接过宝宝，<br/>在你笑的时候偷偷按下快门。
+          </p>
+          <p class="text-xl font-bold mt-6 text-warm-accent">
+            明年今日，不见不散。❤️
+          </p>
+          <p class="text-sm text-warm-muted mt-4">—— 爱你的老公，2026.07.22</p>
+        </div>
+      </div>
+      <p class="text-sm text-warm-muted mt-4 envelope-hint">👆 点一下拆开信封</p>
     </div>
   </section>
 
@@ -606,6 +742,182 @@
     document.querySelectorAll('.animate-slide-left, .animate-slide-right, .animate-scale-in, .animate-fade-up').forEach(el => {
       observer.observe(el);
     });
+
+    // ==================== 新模块：信封展开 ====================
+    function toggleEnvelope() {
+      const env = document.getElementById('envelopeCard');
+      env.classList.toggle('opened');
+      if (env.classList.contains('opened')) {
+        const hint = env.querySelector('.envelope-hint');
+        if (hint) hint.style.display = 'none';
+      }
+    }
+
+    // ==================== 新模块：我们的生活数字 - 动态计算 ====================
+    const babyBirth = new Date(2024, 3, 4); // 2024.04.04
+    const babyMonths = Math.floor((today - babyBirth) / (1000 * 60 * 60 * 24 * 30.44));
+    const totalMeals = Math.floor(daysTogether * 2.8);
+    const nightFeeds = Math.floor((today - babyBirth) / (1000 * 60 * 60 * 24)) * 6;
+    document.getElementById('babyMonths').textContent = babyMonths;
+    document.getElementById('totalMeals').textContent = '~' + totalMeals.toLocaleString();
+    document.getElementById('nightFeeds').textContent = '~' + nightFeeds.toLocaleString();
+
+    // ==================== 彩蛋1：摇一摇 → 满屏星星 ✨ ====================
+    let lastShakeTime = 0;
+    let shakeThreshold = 15;
+    if (window.DeviceMotionEvent) {
+      window.addEventListener('devicemotion', (e) => {
+        const acc = e.accelerationIncludingGravity;
+        if (!acc) return;
+        const magnitude = Math.sqrt(acc.x * acc.x + acc.y * acc.y + acc.z * acc.z);
+        const now = Date.now();
+        if (magnitude > shakeThreshold && now - lastShakeTime > 3000) {
+          lastShakeTime = now;
+          // 金色星星从底部升起
+          confetti({
+            particleCount: 80,
+            spread: 100,
+            origin: { y: 1, x: 0.5 },
+            angle: 270,
+            startVelocity: 40,
+            colors: ['#FFD700', '#FFA500', '#FFDAB9', '#FFF8DC', '#C4956A'],
+            shapes: ['star'],
+            scalar: 1.5,
+          });
+          // 显示提示
+          const toast = document.getElementById('easterToast');
+          document.getElementById('easterMsg').textContent = '✨ 抓到你了！愿你的每一天都闪闪发光 ✨';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+      });
+    }
+
+    // ==================== 彩蛋2：长按照片 → 小心心 💕 ====================
+    let longPressTimer;
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+      heroSection.addEventListener('touchstart', (e) => {
+        longPressTimer = setTimeout(() => {
+          const touch = e.touches[0];
+          const x = touch ? touch.clientX / window.innerWidth : 0.5;
+          const y = touch ? touch.clientY / window.innerHeight : 0.5;
+          // 从手指位置发射小心心
+          confetti({
+            particleCount: 30,
+            spread: 50,
+            origin: { x, y },
+            colors: ['#ff6b6b', '#ff8787', '#ffd6d6', '#C4956A'],
+            shapes: ['circle'],
+            scalar: 0.8,
+            gravity: 0.5,
+            ticks: 100,
+          });
+          clearTimeout(longPressTimer);
+        }, 1500);
+      });
+      heroSection.addEventListener('touchend', () => clearTimeout(longPressTimer));
+      heroSection.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+    }
+
+    // ==================== 彩蛋3：滑动到底部 → 烟花 🎆 ====================
+    let bottomFired = false;
+    window.addEventListener('scroll', () => {
+      if (bottomFired) return;
+      const scrollBottom = window.innerHeight + window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollBottom >= docHeight - 100) {
+        bottomFired = true;
+        // 延迟一下，让她看到页脚后再触发
+        setTimeout(() => {
+          const end = Date.now() + 2000;
+          const colors = ['#C4956A', '#E8D5C4', '#ffd93d', '#ff6b6b', '#a0e7e5', '#ffb347'];
+          (function frame() {
+            confetti({
+              particleCount: 3,
+              angle: 60,
+              spread: 55,
+              origin: { x: Math.random(), y: 0.6 + Math.random() * 0.3 },
+              colors: [colors[Math.floor(Math.random() * colors.length)]],
+            });
+            if (Date.now() < end) requestAnimationFrame(frame);
+          })();
+          // 弹窗
+          const toast = document.getElementById('easterToast');
+          document.getElementById('easterMsg').textContent = '🎆 谢谢你认真看完我们的故事 —— 这是送给你的小烟花';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 3000);
+        }, 600);
+      }
+    });
+
+    // ==================== 彩蛋4：九宫格照片长按 → 随机回忆 📸 ====================
+    const photoMemories = [
+      '记得那天你对着这盘菜拍了五分钟，说"先让手机吃"。',
+      '这张照片是我趁你不注意偷拍的，你发现后追了我半条街。',
+      '那天阳光特别好，你站在窗边，我觉得整个世界都安静了。',
+      '宝宝的小手第一次抓住你的手指，你在产房里哭了。',
+      '周末赖床的早上，三个人挤在一张床上，谁也不想起。',
+      '你生日那天许愿的样子特别认真，我问你许了什么，你说保密。',
+      '这张是带宝宝第一次去公园，你紧张得全程寸步不离。',
+      '凌晨三点喂完奶，你累得靠在床头睡着了，我拍下了这一刻。',
+      '你第一次成功做出戚风蛋糕，激动得给所有人发了照片。',
+      '下雨天你抱着宝宝站在窗前教他认雨滴，我在背后看了好久。',
+      '你穿着我的大T恤在家里晃悠，说这是"最舒服的睡衣"。',
+      '你给宝宝读绘本的时候，模仿各种动物声音，我在门外笑出声。',
+    ];
+
+    // 给照片卡片绑定长按事件
+    document.querySelectorAll('#photoGrid .grid-item').forEach((item, index) => {
+      let photoLongPress;
+      item.addEventListener('touchstart', () => {
+        photoLongPress = setTimeout(() => {
+          const memory = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
+          document.getElementById('easterMsg').textContent = memory;
+          const toast = document.getElementById('easterToast');
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 3000);
+          // 小心心
+          confetti({
+            particleCount: 20,
+            spread: 40,
+            origin: { y: 0.5 },
+            colors: ['#ff6b6b', '#C4956A'],
+            shapes: ['circle'],
+            scalar: 0.6,
+          });
+        }, 1200);
+      });
+      item.addEventListener('touchend', () => clearTimeout(photoLongPress));
+      item.addEventListener('touchmove', () => clearTimeout(photoLongPress));
+    });
+
+    // ==================== 彩蛋5：连续点击落款5次 → 秘密入口 🔢 ====================
+    let signatureTapCount = 0;
+    let signatureTapTimer = null;
+    const signatureBox = document.getElementById('signatureBox');
+    if (signatureBox) {
+      signatureBox.addEventListener('click', () => {
+        signatureTapCount++;
+        if (signatureTapCount === 1) {
+          signatureTapTimer = setTimeout(() => { signatureTapCount = 0; }, 2000);
+        }
+        if (signatureTapCount >= 5) {
+          clearTimeout(signatureTapTimer);
+          signatureTapCount = 0;
+          const toast = document.getElementById('easterToast');
+          document.getElementById('easterMsg').textContent = '🔑 恭喜你发现了隐藏入口！这是我们的秘密基地，下次更新见 ❤️';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 3500);
+          confetti({
+            particleCount: 100,
+            spread: 80,
+            origin: { y: 0.5 },
+            colors: ['#C4956A', '#E8D5C4', '#ffd93d', '#ff6b6b', '#a0e7e5'],
+          });
+        }
+      });
+    }
 
     // ==================== 注册 Service Worker ====================
     if ('serviceWorker' in navigator) {
