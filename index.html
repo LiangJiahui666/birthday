@@ -8,8 +8,6 @@
   <meta name="theme-color" content="#C4956A" />
   <meta name="description" content="老婆30岁生日快乐 - 我们的时光纪念册" />
   <title>30岁生日快乐 🎂</title>
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -30,6 +28,7 @@
             'scale-in': 'scaleIn 0.5s ease-out forwards',
             'float': 'float 3s ease-in-out infinite',
             'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+            'bounce-sm': 'bounceSm 0.6s ease-in-out',
           },
           keyframes: {
             fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
@@ -40,27 +39,20 @@
             scaleIn: { '0%': { opacity: '0', transform: 'scale(0.8)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
             float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
             pulseSoft: { '0%, 100%': { boxShadow: '0 0 0 0 rgba(196,149,106,0.4)' }, '50%': { boxShadow: '0 0 0 15px rgba(196,149,106,0)' } },
+            bounceSm: { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.3)' } },
           },
         },
       },
     };
   </script>
-
-  <!-- canvas-confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
-  <!-- Google Font: 手写体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
-
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>" />
-
   <style>
-    html {
-      scroll-behavior: smooth; overflow-y: auto; -webkit-overflow-scrolling: touch; height: 100%;
-    }
+    html { scroll-behavior: smooth; overflow-y: auto; -webkit-overflow-scrolling: touch; height: 100%; }
     body {
       background-color: #FEFAF6; color: #4A3728; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
@@ -69,8 +61,6 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #FEFAF6; }
     ::-webkit-scrollbar-thumb { background: #C4956A; border-radius: 10px; }
-
-    /* 加载过渡页 */
     .loading-screen {
       position: fixed; inset: 0; z-index: 9999; background: #FEFAF6;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -80,16 +70,12 @@
     .loading-bar { width: 200px; height: 3px; background: #E8D5C4; border-radius: 10px; overflow: hidden; margin-top: 24px; }
     .loading-bar-inner { width: 100%; height: 100%; background: #C4956A; border-radius: 10px; animation: loadingAnim 2s ease-in-out forwards; }
     @keyframes loadingAnim { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
-
-    /* 首屏 */
     .hero-section {
       position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
       background-size: cover; background-position: center; background-repeat: no-repeat;
       -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
     }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35)); }
-
-    /* 音乐按钮 */
     .music-btn {
       position: fixed; bottom: 24px; right: 24px; z-index: 500;
       width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.85);
@@ -99,383 +85,165 @@
     }
     .music-btn.playing { animation: breathe 2.5s ease-in-out infinite; box-shadow: 0 4px 24px rgba(196,149,106,0.35); }
     .music-btn:active { transform: scale(0.92); }
-
-    /* 时间轴 */
     .timeline-container { position: relative; }
-    .timeline-line {
-      position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #E8D5C4, #C4956A, #E8D5C4);
-      transform: translateX(-50%);
-    }
-    .timeline-marker {
-      position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
-      width: 36px; height: 36px; border-radius: 50%; background: #FEFAF6;
-      border: 2px solid #C4956A; display: flex; align-items: center; justify-content: center;
-      font-size: 16px; z-index: 1; box-shadow: 0 2px 8px rgba(196,149,106,0.12);
-    }
-    .timeline-card {
-      background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border-top: 3px solid #C4956A;
-    }
+    .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #E8D5C4, #C4956A, #E8D5C4); transform: translateX(-50%); }
+    .timeline-marker { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: 36px; height: 36px; border-radius: 50%; background: #FEFAF6; border: 2px solid #C4956A; display: flex; align-items: center; justify-content: center; font-size: 16px; z-index: 1; box-shadow: 0 2px 8px rgba(196,149,106,0.12); }
+    .timeline-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border-top: 3px solid #C4956A; }
     .timeline-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
     .timeline-card.expanded .timeline-detail { max-height: 600px; opacity: 1; margin-top: 16px; }
     .timeline-detail { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.4s ease, margin 0.4s ease; }
-
-    /* 新模块：数字卡片 */
-    .number-card {
-      background: white; border-radius: 16px; padding: 20px 16px; text-align: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.3s;
-    }
+    .number-card { background: white; border-radius: 16px; padding: 20px 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.3s; }
     .number-card:hover { transform: translateY(-4px); }
-
-    /* 新模块：横向滑动便签 */
-    .notes-scroll {
-      display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch; padding: 8px 4px 20px;
-    }
+    .notes-scroll { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 8px 4px 20px; }
     .notes-scroll::-webkit-scrollbar { display: none; }
-    .note-card {
-      flex: 0 0 260px; scroll-snap-align: center; background: #FFF9F0;
-      border-radius: 16px; padding: 24px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-      position: relative; min-height: 160px; display: flex; align-items: center;
-    }
-    .note-card::before {
-      content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-      width: 48px; height: 8px; background: #C4956A; border-radius: 4px; opacity: 0.5;
-    }
+    .note-card { flex: 0 0 260px; scroll-snap-align: center; background: #FFF9F0; border-radius: 16px; padding: 24px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); position: relative; min-height: 160px; display: flex; align-items: center; }
+    .note-card::before { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 48px; height: 8px; background: #C4956A; border-radius: 4px; opacity: 0.5; }
     .note-card:nth-child(odd) { background: #FFF9F0; }
     .note-card:nth-child(even) { background: #F5EDE3; }
-
-    /* 新模块：信封 */
-    .envelope {
-      background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%);
-      border-radius: 20px; padding: 40px 28px; position: relative; overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08); text-align: center; cursor: pointer;
-      transition: transform 0.3s;
-    }
+    .envelope { background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%); border-radius: 20px; padding: 40px 28px; position: relative; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08); text-align: center; cursor: pointer; transition: transform 0.3s; }
     .envelope:hover { transform: scale(1.02); }
-    .envelope-flap {
-      position: absolute; top: 0; left: 0; right: 0; height: 0;
-      border-left: 50vw solid transparent; border-right: 50vw solid transparent;
-      border-top: 40px solid #E8D5C4; transition: transform 0.5s ease;
-      transform-origin: top center;
-    }
-    .envelope.opened .envelope-flap { transform: rotateX(180deg); }
     .envelope-seal { display: inline-block; background: #C4956A; color: white; padding: 6px 20px; border-radius: 20px; font-size: 14px; margin-bottom: 16px; }
     .envelope-content { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.5s ease; }
-    .envelope.opened .envelope-content { max-height: 400px; opacity: 1; margin-top: 20px; }
-
-    /* 照片九宫格 */
-    .grid-item {
-      position: relative; overflow: hidden; border-radius: 12px; cursor: pointer;
-      aspect-ratio: 1; transition: transform 0.3s;
-      -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
-    }
+    .envelope.opened .envelope-content { max-height: 500px; opacity: 1; margin-top: 20px; }
+    .grid-item { position: relative; overflow: hidden; border-radius: 12px; cursor: pointer; aspect-ratio: 1; transition: transform 0.3s; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .grid-item:hover { transform: scale(1.03); }
-    .grid-item img { width: 100%; height: 100%; object-fit: cover; }
-
-    /* 灯箱 */
-    .lightbox {
-      position: fixed; inset: 0; z-index: 8000; background: rgba(0,0,0,0.92);
-      display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
+    .grid-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: auto; }
+    .photo-badge {
+      position: absolute; bottom: 6px; right: 6px; width: 28px; height: 28px;
+      background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; z-index: 2; pointer-events: auto; box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      opacity: 0; transition: opacity 0.3s;
     }
+    .grid-item:hover .photo-badge, .grid-item:active .photo-badge { opacity: 1; }
+    .lightbox { position: fixed; inset: 0; z-index: 8000; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
     .lightbox.active { opacity: 1; visibility: visible; }
     .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 8px; object-fit: contain; }
-    .lightbox-close {
-      position: absolute; top: 20px; right: 24px; color: white; font-size: 32px;
-      cursor: pointer; z-index: 10; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
-    }
-    .lightbox-prev, .lightbox-next {
-      position: absolute; top: 50%; transform: translateY(-50%); color: white; font-size: 28px;
-      cursor: pointer; z-index: 10; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.15); border-radius: 50%; transition: background 0.3s;
-    }
-    .lightbox-prev:active, .lightbox-next:active { background: rgba(255,255,255,0.3); }
-    .lightbox-prev { left: 12px; }
-    .lightbox-next { right: 12px; }
-
-    /* 彩蛋弹窗 */
-    .easter-egg-toast {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-      background: white; padding: 24px 36px; border-radius: 20px; z-index: 9000;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center;
-      opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      max-width: 85vw;
-    }
+    .lightbox-close { position: absolute; top: 20px; right: 24px; color: white; font-size: 32px; cursor: pointer; z-index: 10; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+    .lightbox-prev, .lightbox-next { position: absolute; top: 50%; transform: translateY(-50%); color: white; font-size: 28px; cursor: pointer; z-index: 10; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); border-radius: 50%; transition: background 0.3s; }
+    .lightbox-prev { left: 12px; } .lightbox-next { right: 12px; }
+    .easter-egg-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: white; padding: 24px 36px; border-radius: 20px; z-index: 9000; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 85vw; }
     .easter-egg-toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
-
-    /* 倒计时 */
-    .countdown-item {
-      background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); border-radius: 12px;
-      padding: 12px 16px; text-align: center; min-width: 64px;
-    }
-
-    /* 响应式调整 */
+    .countdown-item { background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); border-radius: 12px; padding: 12px 16px; text-align: center; min-width: 64px; }
     @media (max-width: 768px) {
       .timeline-line { left: 16px; }
       .timeline-marker { left: 16px; width: 28px; height: 28px; font-size: 12px; top: 10px; }
       .timeline-card { margin-left: 48px !important; margin-right: 8px !important; }
       .timeline-container > div { flex-direction: row !important; justify-content: flex-start !important; }
       .timeline-container > div > .timeline-card { width: 100% !important; text-align: left !important; }
-      .envelope-flap { border-left-width: 45vw; border-right-width: 45vw; }
+      .photo-badge { opacity: 0.85 !important; }
     }
   </style>
 </head>
 <body>
-
-  <!-- ==================== 加载过渡页 ==================== -->
   <div class="loading-screen" id="loadingScreen">
     <p class="text-warm-accent text-lg" style="letter-spacing: 2px;">正在加载我们的故事...</p>
     <div class="loading-bar"><div class="loading-bar-inner"></div></div>
   </div>
-
-  <!-- ==================== 音乐播放器（隐藏） ==================== -->
   <audio id="bgMusic" loop preload="none" src="music/song.mp3"></audio>
-
-  <!-- ==================== 音乐开关按钮 ==================== -->
   <div class="music-btn" id="musicBtn" title="点击播放音乐">🎵</div>
 
-  <!-- ==================== 模块1：首屏开场 ==================== -->
   <section class="hero-section" id="hero" style="background-image: url('images/01-hero.jpg');">
     <div class="hero-overlay"></div>
     <div class="relative z-10 text-center text-white px-6 w-full max-w-lg">
-      <!-- 倒计时 -->
       <div id="countdownSection" class="flex justify-center gap-3 mb-8">
         <div class="countdown-item"><div class="text-2xl font-bold" id="cdDays">--</div><div class="text-xs opacity-80 mt-1">天</div></div>
         <div class="countdown-item"><div class="text-2xl font-bold" id="cdHours">--</div><div class="text-xs opacity-80 mt-1">时</div></div>
         <div class="countdown-item"><div class="text-2xl font-bold" id="cdMins">--</div><div class="text-xs opacity-80 mt-1">分</div></div>
         <div class="countdown-item"><div class="text-2xl font-bold" id="cdSecs">--</div><div class="text-xs opacity-80 mt-1">秒</div></div>
       </div>
-
-      <h1 class="text-3xl md:text-4xl font-bold mb-3 animate-fade-in leading-relaxed" style="text-shadow: 0 2px 12px rgba(0,0,0,0.3);">
-        欢迎来到老婆的<br/>30岁小宇宙 ✨
-      </h1>
-      <p class="text-lg md:text-xl mb-10 opacity-90 animate-fade-in" style="animation-delay: 0.4s; text-shadow: 0 1px 8px rgba(0,0,0,0.3);">
-        2026.07.22 | 生日快乐
-      </p>
-      <a href="#timeline" class="inline-block px-8 py-3 rounded-full border-2 border-white/60 text-white font-medium
-        animate-breathe cursor-pointer hover:bg-white/10 transition-colors no-underline"
-        style="text-shadow: 0 1px 6px rgba(0,0,0,0.3);">
-        开启我们的时光 ↓
-      </a>
-      <!-- 向下滚动提示 -->
+      <h1 class="text-3xl md:text-4xl font-bold mb-3 animate-fade-in leading-relaxed" style="text-shadow: 0 2px 12px rgba(0,0,0,0.3);">欢迎来到老婆的<br/>30岁小宇宙 ✨</h1>
+      <p class="text-lg md:text-xl mb-10 opacity-90 animate-fade-in" style="animation-delay: 0.4s; text-shadow: 0 1px 8px rgba(0,0,0,0.3);">2026.07.22 | 生日快乐</p>
+      <a href="#timeline" class="inline-block px-8 py-3 rounded-full border-2 border-white/60 text-white font-medium animate-breathe cursor-pointer hover:bg-white/10 transition-colors no-underline" style="text-shadow: 0 1px 6px rgba(0,0,0,0.3);">开启我们的时光 ↓</a>
       <p class="text-sm opacity-50 mt-6 animate-float">向下滑动</p>
     </div>
   </section>
 
-  <!-- ==================== 模块2：时光轴 ==================== -->
   <section id="timeline" class="py-20 px-4 md:px-8 max-w-3xl mx-auto">
-    <!-- 动态天数 -->
     <div class="text-center mb-16">
-      <p class="text-warm-accent text-lg md:text-xl font-medium animate-fade-up">
-        从领证那天到今天，我们已经一起走过了
-      </p>
-      <p class="text-5xl md:text-6xl font-bold text-warm-accent my-3 animate-scale-in" id="daysCount" style="animation-delay: 0.3s;">
-        --
-      </p>
+      <p class="text-warm-accent text-lg md:text-xl font-medium animate-fade-up">从领证那天到今天，我们已经一起走过了</p>
+      <p class="text-5xl md:text-6xl font-bold text-warm-accent my-3 animate-scale-in" id="daysCount" style="animation-delay: 0.3s;">--</p>
       <p class="text-warm-muted">天</p>
     </div>
-
-    <!-- 时间轴 -->
     <div class="timeline-container relative">
       <div class="timeline-line"></div>
-
-      <!-- 节点1：领证 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-end;">
         <div class="timeline-marker">📜</div>
-        <div class="timeline-card flex-1 max-w-md animate-slide-right" onclick="toggleTimelineCard(this)"
-          style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">📜</span>
-            <div>
-              <p class="font-bold text-warm-dark">2022.03.26</p>
-              <p class="text-sm text-warm-muted">合法伴侣</p>
-            </div>
-          </div>
-          <div class="timeline-detail">
-            <img src="images/02-lingzheng.jpg" alt="领证那天" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
-            <p class="text-sm text-warm-muted leading-relaxed">
-              那天阳光很好，红本本上的我们都笑得有点傻。<br/>从这天起，人生多了一个并肩同行的人。
-            </p>
-          </div>
+        <div class="timeline-card flex-1 max-w-md animate-slide-right" onclick="toggleTimelineCard(this)" style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3"><span class="text-2xl">📜</span><div><p class="font-bold text-warm-dark">2022.03.26</p><p class="text-sm text-warm-muted">合法伴侣</p></div></div>
+          <div class="timeline-detail"><img src="images/02-lingzheng.jpg" alt="领证那天" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" /><p class="text-sm text-warm-muted leading-relaxed">那天阳光很好，红本本上的我们都笑得有点傻。<br/>从这天起，人生多了一个并肩同行的人。</p></div>
         </div>
       </div>
-
-      <!-- 节点2：婚礼 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-start;">
         <div class="timeline-marker">💒</div>
-        <div class="timeline-card flex-1 max-w-md animate-slide-left"
-          onclick="toggleTimelineCard(this)" style="animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards;">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">💒</span>
-            <div>
-              <p class="font-bold text-warm-dark">2022.10.03</p>
-              <p class="text-sm text-warm-muted">我们的婚礼</p>
-            </div>
-          </div>
-          <div class="timeline-detail">
-            <img src="images/03-hunli.jpg" alt="婚礼那天" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
-            <p class="text-sm text-warm-muted leading-relaxed">
-              你穿着婚纱站在光里的样子，是我见过最美的画面。<br/>那天我在心里说，要一辈子对你好。
-            </p>
-          </div>
+        <div class="timeline-card flex-1 max-w-md animate-slide-left" onclick="toggleTimelineCard(this)" style="animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3"><span class="text-2xl">💒</span><div><p class="font-bold text-warm-dark">2022.10.03</p><p class="text-sm text-warm-muted">我们的婚礼</p></div></div>
+          <div class="timeline-detail"><img src="images/03-hunli.jpg" alt="婚礼那天" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" /><p class="text-sm text-warm-muted leading-relaxed">你穿着婚纱站在光里的样子，是我见过最美的画面。<br/>那天我在心里说，要一辈子对你好。</p></div>
         </div>
       </div>
-
-      <!-- 节点3：宝宝出生 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-end;">
         <div class="timeline-marker">👶</div>
-        <div class="timeline-card flex-1 max-w-md animate-slide-right"
-          onclick="toggleTimelineCard(this)" style="animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards;">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">👶</span>
-            <div>
-              <p class="font-bold text-warm-dark">2024.04.04</p>
-              <p class="text-sm text-warm-muted">小家伙报到</p>
-            </div>
-          </div>
-          <div class="timeline-detail">
-            <img src="images/04-baby.jpg" alt="宝宝出生" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
-            <p class="text-sm text-warm-muted leading-relaxed">
-              我们的小天使降临了。<br/>我见过你初为妈妈的脆弱，更懂你藏在温柔里的勇敢。
-            </p>
-          </div>
+        <div class="timeline-card flex-1 max-w-md animate-slide-right" onclick="toggleTimelineCard(this)" style="animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3"><span class="text-2xl">👶</span><div><p class="font-bold text-warm-dark">2024.04.04</p><p class="text-sm text-warm-muted">小家伙报到</p></div></div>
+          <div class="timeline-detail"><img src="images/04-baby.jpg" alt="宝宝出生" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" /><p class="text-sm text-warm-muted leading-relaxed">我们的小天使降临了。<br/>我见过你初为妈妈的脆弱，更懂你藏在温柔里的勇敢。</p></div>
         </div>
       </div>
-
-      <!-- 节点4：30岁生日 -->
       <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-start;">
         <div class="timeline-marker">🎂</div>
-        <div class="timeline-card flex-1 max-w-md animate-slide-left"
-          onclick="toggleTimelineCard(this)" style="animation-delay: 0.7s; opacity: 0; animation-fill-mode: forwards;">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">🎂</span>
-            <div>
-              <p class="font-bold text-warm-dark">2026.07.22</p>
-              <p class="text-sm text-warm-muted">我的女孩30岁啦</p>
-            </div>
-          </div>
-          <div class="timeline-detail">
-            <img src="images/05-birthday.jpg" alt="30岁生日快乐" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
-            <p class="text-sm text-warm-muted leading-relaxed">
-              30岁的你，是妻子，是妈妈，但更是你自己。<br/>愿你永远自在明亮，永远被爱包围。
-            </p>
-          </div>
+        <div class="timeline-card flex-1 max-w-md animate-slide-left" onclick="toggleTimelineCard(this)" style="animation-delay: 0.7s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3"><span class="text-2xl">🎂</span><div><p class="font-bold text-warm-dark">2026.07.22</p><p class="text-sm text-warm-muted">我的女孩30岁啦</p></div></div>
+          <div class="timeline-detail"><img src="images/05-birthday.jpg" alt="30岁生日快乐" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" /><p class="text-sm text-warm-muted leading-relaxed">30岁的你，是妻子，是妈妈，但更是你自己。<br/>愿你永远自在明亮，永远被爱包围。</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== 模块3：日常碎片照片墙 ==================== -->
   <section class="py-20 px-4 md:px-8 max-w-4xl mx-auto">
-    <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📸 日常碎片</h2>
-      <p class="text-warm-muted">那些平淡无奇的日常，都是我藏在心里的星光。</p>
-    </div>
-
+    <div class="text-center mb-12"><h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📸 日常碎片</h2><p class="text-warm-muted">那些平淡无奇的日常，都是我藏在心里的星光。</p></div>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" id="photoGrid">
-      <!-- 12张占位照片，手机2列整齐、桌面3列整齐 -->
-      <div class="grid-item" onclick="openLightbox(0)"><img src="images/06-daily-1.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(1)"><img src="images/07-daily-2.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(2)"><img src="images/08-daily-3.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(3)"><img src="images/09-daily-4.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(4)"><img src="images/10-daily-5.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(5)"><img src="images/11-daily-6.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(6)"><img src="images/12-daily-7.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(7)"><img src="images/13-daily-8.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(8)"><img src="images/14-daily-9.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(9)"><img src="images/15-daily-10.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(10)"><img src="images/16-daily-11.jpg" alt="日常碎片" loading="lazy" /></div>
-      <div class="grid-item" onclick="openLightbox(11)"><img src="images/17-daily-12.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(0)"><img src="images/06-daily-1.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(0)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(1)"><img src="images/07-daily-2.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(1)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(2)"><img src="images/08-daily-3.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(2)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(3)"><img src="images/09-daily-4.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(3)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(4)"><img src="images/10-daily-5.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(4)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(5)"><img src="images/11-daily-6.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(5)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(6)"><img src="images/12-daily-7.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(6)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(7)"><img src="images/13-daily-8.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(7)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(8)"><img src="images/14-daily-9.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(8)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(9)"><img src="images/15-daily-10.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(9)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(10)"><img src="images/16-daily-11.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(10)">💬</span></div>
+      <div class="grid-item" onclick="openLightbox(11)"><img src="images/17-daily-12.jpg" alt="日常碎片" loading="lazy" /><span class="photo-badge" onclick="event.stopPropagation();showPhotoMemory(11)">💬</span></div>
     </div>
-
-    <!-- 灯箱 -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-      <div class="lightbox-close" onclick="closeLightbox()">✕</div>
-      <div class="lightbox-prev" onclick="event.stopPropagation(); lightboxNav(-1)">‹</div>
-      <img src="" alt="" id="lightboxImg" />
-      <div class="lightbox-next" onclick="event.stopPropagation(); lightboxNav(1)">›</div>
-    </div>
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)"><div class="lightbox-close" onclick="closeLightbox()">✕</div><div class="lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)">‹</div><img src="" alt="" id="lightboxImg" /><div class="lightbox-next" onclick="event.stopPropagation();lightboxNav(1)">›</div></div>
   </section>
 
-  <!-- ==================== 模块4：心里话 ==================== -->
   <section class="py-20 px-6 md:px-8 max-w-2xl mx-auto text-center" style="background: linear-gradient(to bottom, #FEFAF6, #F5EDE3);">
     <div class="font-handwritten">
-      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
-        写了这么多年代码，修了数不清的 <span style="color:#C4956A;">bug</span>，<br/>
-        我人生中最幸运的 <span style="color:#C4956A;">commit</span>，是娶你回家。
-      </p>
-      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
-        这几年我们一起搭建了我们的小家，<br/>迎来了我们的小朋友。
-      </p>
-      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
-        我知道你很辛苦，<br/>也知道你为这个家付出了多少。
-      </p>
-      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
-        30岁不是分水岭，<br/>是你更精彩人生的开始。
-      </p>
-      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
-        你永远可以放心做你自己，<br/>我和宝宝永远是你最坚实的后盾。
-      </p>
-      <p class="text-2xl md:text-3xl font-bold mt-10 text-warm-accent">
-        生日快乐，我的女孩。❤️
-      </p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">写了这么多年代码，修了数不清的 <span style="color:#C4956A;">bug</span>，<br/>我人生中最幸运的 <span style="color:#C4956A;">commit</span>，是娶你回家。</p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">这几年我们一起搭建了我们的小家，<br/>迎来了我们的小朋友。</p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">我知道你很辛苦，<br/>也知道你为这个家付出了多少。</p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">30岁不是分水岭，<br/>是你更精彩人生的开始。</p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">你永远可以放心做你自己，<br/>我和宝宝永远是你最坚实的后盾。</p>
+      <p class="text-2xl md:text-3xl font-bold mt-10 text-warm-accent">生日快乐，我的女孩。❤️</p>
     </div>
-
-    <!-- 蛋糕彩蛋 -->
-    <div class="mt-16 cursor-pointer inline-block" id="cakeBtn" title="点击有惊喜">
-      <span class="text-6xl md:text-7xl animate-float inline-block select-none">🎂</span>
-      <p class="text-sm text-warm-muted mt-2">点一下蛋糕试试~</p>
-    </div>
-
-    <!-- 落款 -->
-    <div class="mt-16 text-warm-muted text-sm leading-relaxed" id="signatureBox">
-      <p>爱你的老公 &amp; 你的小男子汉</p>
-      <p>2026.07.22</p>
-    </div>
+    <div class="mt-16 cursor-pointer inline-block" id="cakeBtn" title="点击有惊喜"><span class="text-6xl md:text-7xl animate-float inline-block select-none">🎂</span><p class="text-sm text-warm-muted mt-2">点一下蛋糕试试~</p></div>
+    <div class="mt-16 text-warm-muted text-sm leading-relaxed select-none" id="signatureBox"><p>爱你的老公 &amp; 你的小男子汉 <span style="opacity:0.5;font-size:10px;">✨</span></p><p>2026.07.22</p></div>
   </section>
 
-  <!-- ==================== 模块A：我们的生活数字 ==================== -->
   <section class="py-20 px-4 md:px-8 max-w-3xl mx-auto">
-    <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📊 我们的生活数字</h2>
-      <p class="text-warm-muted">有些数字，只属于我们。</p>
-    </div>
+    <div class="text-center mb-12"><h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📊 我们的生活数字</h2><p class="text-warm-muted">有些数字，只属于我们。</p></div>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="number-card">
-        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="babyMonths">--</p>
-        <p class="text-xs text-warm-muted mt-2">宝宝来到世界的<br/>月数</p>
-      </div>
-      <div class="number-card">
-        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="totalMeals">--</p>
-        <p class="text-xs text-warm-muted mt-2">一起吃过<br/>大约的饭数</p>
-      </div>
-      <div class="number-card">
-        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="nightFeeds">--</p>
-        <p class="text-xs text-warm-muted mt-2">你大概起来<br/>喂奶的次数</p>
-      </div>
-      <div class="number-card">
-        <p class="text-3xl md:text-4xl font-bold text-warm-accent">+1</p>
-        <p class="text-xs text-warm-muted mt-2">我们的家庭人口<br/>2 → 3</p>
-      </div>
-      <div class="number-card">
-        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="herDays">--</p>
-        <p class="text-xs text-warm-muted mt-2">遇见你之后<br/>快乐的日子</p>
-      </div>
-      <div class="number-card">
-        <p class="text-3xl md:text-4xl font-bold text-warm-accent">∞</p>
-        <p class="text-xs text-warm-muted mt-2">未来还有<br/>无限可能</p>
-      </div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="babyMonths">--</p><p class="text-xs text-warm-muted mt-2">宝宝来到世界的<br/>月数</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="totalMeals">--</p><p class="text-xs text-warm-muted mt-2">一起吃过<br/>大约的饭数</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="nightFeeds">--</p><p class="text-xs text-warm-muted mt-2">你大概起来<br/>喂奶的次数</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">+1</p><p class="text-xs text-warm-muted mt-2">我们的家庭人口<br/>2 → 3</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="herDays">--</p><p class="text-xs text-warm-muted mt-2">遇见你之后<br/>快乐的日子</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">∞</p><p class="text-xs text-warm-muted mt-2">未来还有<br/>无限可能</p></div>
     </div>
   </section>
 
-  <!-- ==================== 模块B：我偷偷记住的事 ==================== -->
   <section class="py-20 px-4 max-w-4xl mx-auto" style="background: linear-gradient(to bottom, #FEFAF6, #FFF9F0);">
-    <div class="text-center mb-10">
-      <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">👀 我偷偷记住的事</h2>
-      <p class="text-warm-muted text-sm">有些小事，你可能以为我没注意到。← 左右滑动 →</p>
-    </div>
-    <div class="notes-scroll" id="notesScroll">
+    <div class="text-center mb-10"><h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">👀 我偷偷记住的事</h2><p class="text-warm-muted text-sm">有些小事，你可能以为我没注意到。← 左右滑动 →</p></div>
+    <div class="notes-scroll">
       <div class="note-card"><p class="text-warm-dark leading-relaxed">你总是把宝宝的衣服叠成小豆腐块，整整齐齐码在小柜子里。</p></div>
       <div class="note-card"><p class="text-warm-dark leading-relaxed">你喝奶茶一定要加珍珠，从来不加椰果。点错了你会默默喝完，但下次还是会说"珍珠"。</p></div>
       <div class="note-card"><p class="text-warm-dark leading-relaxed">你生气的时候先不说话，自己消化完了再来找我。我在旁边大气都不敢出。</p></div>
@@ -487,531 +255,172 @@
     </div>
   </section>
 
-  <!-- ==================== 模块C：明年今日 ==================== -->
   <section class="py-20 px-6 max-w-lg mx-auto">
     <div class="envelope" id="envelopeCard" onclick="toggleEnvelope()">
-      <div class="envelope-seal">📮 来自 2026.07.22 的一封信</div>
-      <p class="text-xs text-warm-muted mb-4">将于 2027.07.22 开启</p>
-      <div class="envelope-content">
-        <div class="font-handwritten">
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            亲爱的老婆：
-          </p>
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            明年的今天，当我们再次打开这个页面时，<br/>不知又会是怎样的光景呢？
-          </p>
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            宝宝可能已经会跑会跳，<br/>追在你后面喊"妈妈"了。
-          </p>
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            我们可能换了新家，<br/>或者去了计划好久的那趟旅行。
-          </p>
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            但有一件事我敢打包票——<br/>我仍然会像今天一样，
-          </p>
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            坐在这里给你写新的代码，<br/>拍你吃饭时沾在嘴角的米粒，
-          </p>
-          <p class="text-lg leading-loose mb-4 text-warm-dark">
-            在你累的时候接过宝宝，<br/>在你笑的时候偷偷按下快门。
-          </p>
-          <p class="text-xl font-bold mt-6 text-warm-accent">
-            明年今日，不见不散。❤️
-          </p>
-          <p class="text-sm text-warm-muted mt-4">—— 爱你的老公，2026.07.22</p>
-        </div>
-      </div>
+      <div class="envelope-seal">📮 来自 2026.07.22 的一封信</div><p class="text-xs text-warm-muted mb-4">将于 2027.07.22 开启</p>
+      <div class="envelope-content"><div class="font-handwritten">
+        <p class="text-lg leading-loose mb-4 text-warm-dark">亲爱的老婆：</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">明年的今天，当我们再次打开这个页面时，<br/>不知又会是怎样的光景呢？</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">宝宝可能已经会跑会跳，<br/>追在你后面喊"妈妈"了。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">我们可能换了新家，<br/>或者去了计划好久的那趟旅行。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">但有一件事我敢打包票——<br/>我仍然会像今天一样，</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">坐在这里给你写新的代码，<br/>拍你吃饭时沾在嘴角的米粒，</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">在你累的时候接过宝宝，<br/>在你笑的时候偷偷按下快门。</p>
+        <p class="text-xl font-bold mt-6 text-warm-accent">明年今日，不见不散。❤️</p>
+        <p class="text-sm text-warm-muted mt-4">—— 爱你的老公，2026.07.22</p>
+      </div></div>
       <p class="text-sm text-warm-muted mt-4 envelope-hint">👆 点一下拆开信封</p>
     </div>
   </section>
 
-  <!-- ==================== 模块5：未来留言板 ==================== -->
   <section class="py-20 px-6 max-w-lg mx-auto text-center">
-    <div class="bg-white rounded-2xl p-8 shadow-sm">
-      <p class="text-3xl mb-4">📝</p>
-      <p class="text-warm-dark font-medium mb-2">留给未来的空白页</p>
-      <p class="text-sm text-warm-muted leading-relaxed">
-        每一年我都会在这里写下新的心里话。<br/>
-        这是我们的线上时光纪念册，<br/>
-        未完待续...
-      </p>
-    </div>
+    <div class="bg-white rounded-2xl p-8 shadow-sm"><p class="text-3xl mb-4">📝</p><p class="text-warm-dark font-medium mb-2">留给未来的空白页</p><p class="text-sm text-warm-muted leading-relaxed">每一年我都会在这里写下新的心里话。<br/>这是我们的线上时光纪念册，<br/>未完待续...</p></div>
   </section>
 
-  <!-- ==================== iPhone 添加到桌面指引 ==================== -->
   <section class="py-12 px-6 max-w-md mx-auto text-center" id="pwaGuide" style="display:none;">
-    <div class="bg-warm-soft rounded-2xl p-6">
-      <p class="text-sm text-warm-muted leading-relaxed">
-        📱 <b>iPhone 用户：</b>在 <b>Safari 浏览器</b> 中打开此页面<br/>
-        点击底部中间的 <b>分享按钮 ↑</b> → <b>「添加到主屏幕」</b><br/>
-        就能像 App 一样随时打开啦 ✨
-      </p>
-    </div>
+    <div class="bg-warm-soft rounded-2xl p-6"><p class="text-sm text-warm-muted leading-relaxed">📱 <b>iPhone 用户：</b>在 <b>Safari 浏览器</b> 中打开此页面<br/>点击底部中间的 <b>分享按钮 ↑</b> → <b>「添加到主屏幕」</b><br/>就能像 App 一样随时打开啦 ✨</p></div>
   </section>
 
-  <!-- ==================== 页脚 ==================== -->
   <footer class="py-12 px-6 text-center border-t border-warm-soft">
-    <p class="text-xs text-warm-muted mb-2" style="font-family: 'Courier New', monospace;">
-      &lt;!-- Made with ❤️ by 老公 --&gt;
-    </p>
-    <p class="text-xs text-warm-muted">
-      <span class="cursor-pointer select-none" id="footerHeart" title="❤️">❤️</span>
-    </p>
+    <p class="text-xs text-warm-muted mb-2" style="font-family: 'Courier New', monospace;">&lt;!-- Made with ❤️ by 老公 --&gt;</p>
+    <p class="text-xs text-warm-muted"><span class="cursor-pointer select-none" id="footerHeart" title="❤️">❤️</span></p>
   </footer>
 
-  <!-- ==================== 彩蛋弹窗 ==================== -->
-  <div class="easter-egg-toast" id="easterToast">
-    <p class="text-4xl mb-3">💌</p>
-    <p class="text-lg text-warm-dark font-handwritten" id="easterMsg"></p>
-  </div>
-
-  <!-- ==================== 生日歌彩蛋提示 ==================== -->
-  <div class="easter-egg-toast" id="birthdayToast">
-    <p class="text-4xl mb-3">🎵</p>
-    <p class="text-lg text-warm-dark font-handwritten">Happy Birthday to You~ 🎂</p>
-  </div>
+  <div class="easter-egg-toast" id="easterToast"><p class="text-4xl mb-3">💌</p><p class="text-lg text-warm-dark font-handwritten" id="easterMsg"></p></div>
+  <div class="easter-egg-toast" id="birthdayToast"><p class="text-4xl mb-3">🎵</p><p class="text-lg text-warm-dark font-handwritten">Happy Birthday to You~ 🎂</p></div>
 
   <script>
-    // ==================== 加载过渡页 ====================
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('loadingScreen').classList.add('hidden');
-      }, 2200);
-    });
-
-    // ==================== 音乐控制 ====================
+    window.addEventListener('load', () => { setTimeout(() => { document.getElementById('loadingScreen').classList.add('hidden'); }, 2200); });
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
     let isPlaying = false;
-
     musicBtn.addEventListener('click', () => {
-      if (isPlaying) {
-        bgMusic.pause();
-        musicBtn.textContent = '🎵';
-        musicBtn.classList.remove('playing');
-      } else {
-        bgMusic.play().then(() => {
-          musicBtn.textContent = '🎶';
-          musicBtn.classList.add('playing');
-        }).catch(() => { /* 忽略播放失败 */ });
-      }
+      if (isPlaying) { bgMusic.pause(); musicBtn.textContent = '🎵'; musicBtn.classList.remove('playing'); }
+      else { bgMusic.play().then(() => { musicBtn.textContent = '🎶'; musicBtn.classList.add('playing'); }).catch(() => {}); }
       isPlaying = !isPlaying;
     });
-
     bgMusic.addEventListener('play', () => { isPlaying = true; musicBtn.textContent = '🎶'; musicBtn.classList.add('playing'); });
     bgMusic.addEventListener('pause', () => { isPlaying = false; musicBtn.textContent = '🎵'; musicBtn.classList.remove('playing'); });
 
-    // ==================== 倒计时（距离7月22日） ====================
     function updateCountdown() {
       const now = new Date();
-      const birthday = new Date(now.getFullYear(), 6, 22, 0, 0, 0); // 7月22日
-
-      // 如果今年的生日已过，算明年的
-      if (now > birthday) {
-        birthday.setFullYear(birthday.getFullYear() + 1);
-      }
-
+      const birthday = new Date(now.getFullYear(), 6, 22, 0, 0, 0);
+      if (now > birthday) birthday.setFullYear(birthday.getFullYear() + 1);
       const diff = birthday - now;
-
-      if (diff <= 0) {
-        document.getElementById('countdownSection').innerHTML =
-          '<p class="text-2xl font-bold animate-scale-in" style="text-shadow: 0 2px 12px rgba(0,0,0,0.3);">🎉 今天就是你的30岁生日！ 🎉</p>';
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-      document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
-      document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
-      document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
-      document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+      if (diff <= 0) { document.getElementById('countdownSection').innerHTML = '<p class="text-2xl font-bold animate-scale-in" style="text-shadow: 0 2px 12px rgba(0,0,0,0.3);">🎉 今天就是你的30岁生日！ 🎉</p>'; return; }
+      document.getElementById('cdDays').textContent = String(Math.floor(diff/(86400000))).padStart(2,'0');
+      document.getElementById('cdHours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+      document.getElementById('cdMins').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+      document.getElementById('cdSecs').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
     }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    updateCountdown(); setInterval(updateCountdown, 1000);
 
-    // ==================== 天数计算（从领证到今天） ====================
-    const marriageDate = new Date(2022, 2, 26); // 2022.03.26
+    const marriageDate = new Date(2022, 2, 26);
     const today = new Date();
-    const daysTogether = Math.floor((today - marriageDate) / (1000 * 60 * 60 * 24));
+    const daysTogether = Math.floor((today - marriageDate) / 86400000);
     document.getElementById('daysCount').textContent = daysTogether.toLocaleString();
 
-    // ==================== 时间轴展开/收起 ====================
-    function toggleTimelineCard(card) {
-      card.classList.toggle('expanded');
-    }
+    function toggleTimelineCard(card) { card.classList.toggle('expanded'); }
 
-    // ==================== 照片灯箱 ====================
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
-    const gridItems = document.querySelectorAll('#photoGrid .grid-item img');
-    const photoSrcs = Array.from(gridItems).map(img => img.src);
+    const gridImgs = document.querySelectorAll('#photoGrid .grid-item img');
+    const photoSrcs = Array.from(gridImgs).map(img => img.src);
     let currentPhotoIndex = 0;
+    function openLightbox(index) { currentPhotoIndex = index; lightboxImg.src = photoSrcs[index]; lightbox.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox(e) { if (e && e.target !== lightbox && e.target !== lightboxImg) return; lightbox.classList.remove('active'); document.body.style.overflow = ''; }
+    function lightboxNav(d) { currentPhotoIndex = (currentPhotoIndex + d + photoSrcs.length) % photoSrcs.length; lightboxImg.src = photoSrcs[currentPhotoIndex]; }
+    document.addEventListener('keydown', (e) => { if (!lightbox.classList.contains('active')) return; if (e.key === 'ArrowLeft') lightboxNav(-1); if (e.key === 'ArrowRight') lightboxNav(1); if (e.key === 'Escape') { lightbox.classList.remove('active'); document.body.style.overflow = ''; } });
 
-    function openLightbox(index) {
-      currentPhotoIndex = index;
-      lightboxImg.src = photoSrcs[index];
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox(e) {
-      if (e && e.target !== lightbox && e.target !== lightboxImg) return;
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    function lightboxNav(direction) {
-      currentPhotoIndex = (currentPhotoIndex + direction + photoSrcs.length) % photoSrcs.length;
-      lightboxImg.src = photoSrcs[currentPhotoIndex];
-    }
-
-    // 键盘左右切换灯箱照片
-    document.addEventListener('keydown', (e) => {
-      if (!lightbox.classList.contains('active')) return;
-      if (e.key === 'ArrowLeft') lightboxNav(-1);
-      if (e.key === 'ArrowRight') lightboxNav(1);
-      if (e.key === 'Escape') { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
-    });
-
-    // ==================== 蛋糕彩蛋：爱心 + 彩带特效 ====================
+    // ==================== 蛋糕：彩色粒子（不用emoji避免白底） ====================
     document.getElementById('cakeBtn').addEventListener('click', () => {
-      // 第一波：从蛋糕位置爆发爱心
-      confetti({
-        particleCount: 60,
-        spread: 60,
-        origin: { y: 0.55 },
-        colors: ['#ff6b6b', '#ff8787', '#ff5252', '#ff8a80', '#C4956A'],
-        shapes: [confetti.shapeFromText({ text: '❤️', scalar: 2 })],
-        scalar: 1.2,
-      });
-      // 第二波：彩带
-      setTimeout(() => {
-        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d'] });
-      }, 150);
-      setTimeout(() => {
-        confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.3 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b'] });
-        confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.7 }, colors: ['#C4956A', '#E8D5C4', '#ffd93d'] });
-      }, 400);
-      setTimeout(() => {
-        confetti({ particleCount: 120, spread: 100, origin: { y: 0.4 }, decay: 0.94, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
-      }, 700);
+      confetti({ particleCount: 50, spread: 50, origin: { y: 0.55 }, colors: ['#ff6b6b', '#ff5252', '#ff1744', '#C4956A', '#E8D5C4'], scalar: 1.1, ticks: 80 });
+      setTimeout(() => { confetti({ particleCount: 40, spread: 40, origin: { y: 0.55 }, colors: ['#ff6b6b', '#ff5252'], scalar: 0.9, ticks: 60 }); }, 100);
+      setTimeout(() => { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d'] }); }, 200);
+      setTimeout(() => { confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.3 }, colors: ['#C4956A', '#ff6b6b'] }); confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.7 }, colors: ['#C4956A', '#ffd93d'] }); }, 450);
+      setTimeout(() => { confetti({ particleCount: 120, spread: 100, origin: { y: 0.4 }, decay: 0.94, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d', '#a0e7e5'] }); }, 750);
     });
 
-    // ==================== 页脚爱心：隐藏情话盲盒 ====================
-    const loveNotes = [
-      '写过几百行代码，最完美的参数，是你的名字。',
-      '你是我人生中唯一不需要 debug 的存在。',
-      'if (you === happy) { me.happy = true; }',
-      '你一笑，我的整个世界都亮了。',
-      '和你在一起的日子，每一帧都舍不得快进。',
-      '这个世界很大，但有你和宝宝的地方就是家。',
-      '余生很长，但我只想和你一起浪费。',
-    ];
-
+    // ==================== 页脚爱心：情话盲盒 ====================
+    const loveNotes = ['写过几百行代码，最完美的参数，是你的名字。','你是我人生中唯一不需要 debug 的存在。','if (you === happy) { me.happy = true; }','你一笑，我的整个世界都亮了。','和你在一起的日子，每一帧都舍不得快进。','这个世界很大，但有你和宝宝的地方就是家。','余生很长，但我只想和你一起浪费。'];
     document.getElementById('footerHeart').addEventListener('click', () => {
-      const randomNote = loveNotes[Math.floor(Math.random() * loveNotes.length)];
-      document.getElementById('easterMsg').textContent = randomNote;
-      const toast = document.getElementById('easterToast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2800);
+      document.getElementById('easterMsg').textContent = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+      const toast = document.getElementById('easterToast'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2800);
     });
 
-    // ==================== 键盘彩蛋：srkl → 生日歌 ====================
+    // ==================== 键盘 srkl ====================
     let keyBuffer = '';
-    const birthdaySongAudio = new Audio('music/song.mp3');
-    birthdaySongAudio.loop = false;
-
+    const birthdaySongAudio = new Audio('music/song.mp3'); birthdaySongAudio.loop = false;
     document.addEventListener('keydown', (e) => {
-      keyBuffer += e.key.toLowerCase();
-      if (keyBuffer.length > 4) keyBuffer = keyBuffer.slice(-4);
-
-      if (keyBuffer === 'srkl') {
-        keyBuffer = '';
-        // 显示生日歌弹窗
-        const toast = document.getElementById('birthdayToast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-
-        // 播放生日歌
-        birthdaySongAudio.currentTime = 0;
-        birthdaySongAudio.play().catch(() => {});
-
-        // 彩带
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
+      keyBuffer += e.key.toLowerCase(); if (keyBuffer.length > 4) keyBuffer = keyBuffer.slice(-4);
+      if (keyBuffer === 'srkl') { keyBuffer = '';
+        const toast = document.getElementById('birthdayToast'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000);
+        birthdaySongAudio.currentTime = 0; birthdaySongAudio.play().catch(() => {});
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#C4956A','#E8D5C4','#ff6b6b','#ffd93d','#a0e7e5'] });
       }
     });
 
-    // ==================== 手机端双击 → 烟花（不播音乐，不与右下角冲突） ====================
+    // ==================== 双击空白区 → 烟花 ====================
     let lastTap = 0;
     document.addEventListener('touchend', (e) => {
-      if (e.target.closest('button, a, .grid-item, .timeline-card, .music-btn, #cakeBtn, #footerHeart, .lightbox, #signatureBox')) return;
+      if (e.target.closest('button,a,.grid-item,.timeline-card,.music-btn,#cakeBtn,#footerHeart,.lightbox,#signatureBox,.photo-badge')) return;
       const now = Date.now();
-      if (now - lastTap < 400) {
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
-        setTimeout(() => {
-          confetti({ particleCount: 60, spread: 120, origin: { y: 0.4, x: 0.3 }, colors: ['#ff6b6b', '#ffd93d'] });
-          confetti({ particleCount: 60, spread: 120, origin: { y: 0.4, x: 0.7 }, colors: ['#C4956A', '#a0e7e5'] });
-        }, 200);
-      }
+      if (now - lastTap < 400) { confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 }, colors: ['#C4956A','#E8D5C4','#ff6b6b','#ffd93d','#a0e7e5'] }); setTimeout(() => { confetti({ particleCount: 60, spread: 120, origin: { y: 0.4, x: 0.3 }, colors: ['#ff6b6b','#ffd93d'] }); confetti({ particleCount: 60, spread: 120, origin: { y: 0.4, x: 0.7 }, colors: ['#C4956A','#a0e7e5'] }); }, 200); }
       lastTap = now;
     });
 
-    // ==================== 滚动动画：元素进入视口时触发 ====================
-    const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.animate-slide-left, .animate-slide-right, .animate-scale-in, .animate-fade-up').forEach(el => {
-      observer.observe(el);
-    });
-
-    // ==================== 新模块：信封展开 ====================
-    function toggleEnvelope() {
-      const env = document.getElementById('envelopeCard');
-      env.classList.toggle('opened');
-      if (env.classList.contains('opened')) {
-        const hint = env.querySelector('.envelope-hint');
-        if (hint) hint.style.display = 'none';
-      }
-    }
-
-    // ==================== 新模块：我们的生活数字 - 动态计算 ====================
-    const babyBirth = new Date(2024, 3, 4); // 2024.04.04
-    const babyMonths = Math.floor((today - babyBirth) / (1000 * 60 * 60 * 24 * 30.44));
-    const totalMeals = Math.floor(daysTogether * 2.8);
-    const nightFeeds = Math.floor((today - babyBirth) / (1000 * 60 * 60 * 24)) * 6;
-    document.getElementById('babyMonths').textContent = babyMonths;
-    document.getElementById('totalMeals').textContent = '~' + totalMeals.toLocaleString();
-    document.getElementById('nightFeeds').textContent = '~' + nightFeeds.toLocaleString();
-    document.getElementById('herDays').textContent = daysTogether.toLocaleString();
-
-    // ==================== 彩蛋1：摇一摇 → 满屏星星 ✨ ====================
-    let lastShakeTime = 0;
-    const shakeThreshold = 22;
-
-    function fireStars() {
-      const now = Date.now();
-      if (now - lastShakeTime < 2500) return;
-      lastShakeTime = now;
-      // 多波金色星星从底部升起
-      const starColors = ['#FFD700', '#FFA500', '#FFDAB9', '#FFF8DC', '#C4956A', '#FFDF00'];
-      for (let i = 0; i < 3; i++) {
-        setTimeout(() => {
-          confetti({
-            particleCount: 50,
-            spread: 80,
-            origin: { y: 1.1, x: 0.3 + Math.random() * 0.4 },
-            angle: 270 + (Math.random() - 0.5) * 20,
-            startVelocity: 45 + Math.random() * 20,
-            colors: starColors,
-            scalar: 1.2 + Math.random() * 0.8,
-            ticks: 150,
-          });
-        }, i * 150);
-      }
-    }
-
-    function enableShakeListener() {
-      window.addEventListener('devicemotion', (e) => {
-        const acc = e.accelerationIncludingGravity || e.acceleration;
-        if (!acc || acc.x === null) return;
-        const magnitude = Math.sqrt(
-          (acc.x || 0) * (acc.x || 0) +
-          (acc.y || 0) * (acc.y || 0) +
-          (acc.z || 0) * (acc.z || 0)
-        );
-        if (magnitude > shakeThreshold) fireStars();
-      }, { passive: true });
-    }
-
-    // 非iOS设备或WeChat中摇一摇可能不生效，提供双击兜底
-    // 已在 touchend 双击中实现
-
-    if (window.DeviceMotionEvent) {
-      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        document.addEventListener('click', function reqShake() {
-          DeviceMotionEvent.requestPermission()
-            .then(state => { if (state === 'granted') enableShakeListener(); })
-            .catch(() => {});
-          document.removeEventListener('click', reqShake);
-        }, { once: true });
-        document.addEventListener('touchend', function reqShakeT() {
-          DeviceMotionEvent.requestPermission()
-            .then(state => { if (state === 'granted') enableShakeListener(); })
-            .catch(() => {});
-          document.removeEventListener('touchend', reqShakeT);
-        }, { once: true });
-      } else {
-        enableShakeListener();
-      }
-    }
-
-    // ==================== 彩蛋2：长按首屏 → 小心心 💕 ====================
-    let longPressTimer;
-    const heroSectionEl = document.querySelector('.hero-section');
-    if (heroSectionEl) {
-      heroSectionEl.addEventListener('contextmenu', (e) => e.preventDefault());
-      heroSectionEl.addEventListener('touchstart', (e) => {
-        // 记录起始位置，不阻止默认行为，保证滚动和点击正常
-        longPressTimer = setTimeout(() => {
-          const touch = e.touches[0];
-          const x = touch ? touch.clientX / window.innerWidth : 0.5;
-          const y = touch ? touch.clientY / window.innerHeight : 0.5;
-          for (let i = 0; i < 2; i++) {
-            setTimeout(() => {
-              confetti({
-                particleCount: 20,
-                spread: 40,
-                origin: { x: x + (Math.random() - 0.5) * 0.15, y: y + (Math.random() - 0.5) * 0.15 },
-                colors: ['#ff6b6b', '#ff8787', '#ffd6d6', '#C4956A'],
-                scalar: 0.7,
-                gravity: 0.4,
-                ticks: 80,
-              });
-            }, i * 100);
-          }
-          clearTimeout(longPressTimer);
-        }, 1200);
-      }, { passive: true });
-      heroSectionEl.addEventListener('touchend', () => clearTimeout(longPressTimer));
-      heroSectionEl.addEventListener('touchmove', () => clearTimeout(longPressTimer));
-    }
-
-    // ==================== 彩蛋3：滑动到底部 → 烟花 🎆 ====================
+    // ==================== 滑到底 → 烟花 ====================
     let bottomFired = false;
     window.addEventListener('scroll', () => {
       if (bottomFired) return;
-      const scrollBottom = window.innerHeight + window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      if (scrollBottom >= docHeight - 100) {
-        bottomFired = true;
-        // 延迟一下，让她看到页脚后再触发
-        setTimeout(() => {
-          const end = Date.now() + 2000;
-          const colors = ['#C4956A', '#E8D5C4', '#ffd93d', '#ff6b6b', '#a0e7e5', '#ffb347'];
-          (function frame() {
-            confetti({
-              particleCount: 3,
-              angle: 60,
-              spread: 55,
-              origin: { x: Math.random(), y: 0.6 + Math.random() * 0.3 },
-              colors: [colors[Math.floor(Math.random() * colors.length)]],
-            });
-            if (Date.now() < end) requestAnimationFrame(frame);
-          })();
-          // 弹窗
-          const toast = document.getElementById('easterToast');
-          document.getElementById('easterMsg').textContent = '🎆 谢谢你认真看完我们的故事 —— 这是送给你的小烟花';
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 3000);
-        }, 600);
-      }
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) { bottomFired = true;
+        setTimeout(() => { const end = Date.now() + 2000; const colors = ['#C4956A','#E8D5C4','#ffd93d','#ff6b6b','#a0e7e5','#ffb347']; (function frame() { confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: Math.random(), y: 0.6+Math.random()*0.3 }, colors: [colors[Math.floor(Math.random()*colors.length)]] }); if (Date.now()<end) requestAnimationFrame(frame); })(); const toast = document.getElementById('easterToast'); document.getElementById('easterMsg').textContent = '🎆 谢谢你认真看完我们的故事 —— 这是送给你的小烟花'; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }, 600); }
     });
 
-    // ==================== 彩蛋4：九宫格照片长按 → 随机回忆 📸 ====================
-    const photoMemories = [
-      '记得那天你对着这盘菜拍了五分钟，说"先让手机吃"。',
-      '这张照片是我趁你不注意偷拍的，你发现后追了我半条街。',
-      '那天阳光特别好，你站在窗边，我觉得整个世界都安静了。',
-      '宝宝的小手第一次抓住你的手指，你在产房里哭了。',
-      '周末赖床的早上，三个人挤在一张床上，谁也不想起。',
-      '你生日那天许愿的样子特别认真，我问你许了什么，你说保密。',
-      '这张是带宝宝第一次去公园，你紧张得全程寸步不离。',
-      '凌晨三点喂完奶，你累得靠在床头睡着了，我拍下了这一刻。',
-      '你第一次成功做出戚风蛋糕，激动得给所有人发了照片。',
-      '下雨天你抱着宝宝站在窗前教他认雨滴，我在背后看了好久。',
-      '你穿着我的大T恤在家里晃悠，说这是"最舒服的睡衣"。',
-      '你给宝宝读绘本的时候，模仿各种动物声音，我在门外笑出声。',
-    ];
-
-    // 给照片卡片绑定长按事件
-    document.querySelectorAll('#photoGrid .grid-item').forEach((item, index) => {
-      let photoLongPress;
-      item.addEventListener('contextmenu', (e) => e.preventDefault());
-      item.addEventListener('touchstart', (e) => {
-        photoLongPress = setTimeout(() => {
-          const memory = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
-          document.getElementById('easterMsg').textContent = memory;
-          const toast = document.getElementById('easterToast');
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 3000);
-          confetti({
-            particleCount: 20,
-            spread: 40,
-            origin: { y: 0.5 },
-            colors: ['#ff6b6b', '#C4956A'],
-            scalar: 0.6,
-          });
-        }, 1000);
-      }, { passive: true });
-      item.addEventListener('touchend', () => clearTimeout(photoLongPress));
-      item.addEventListener('touchmove', () => clearTimeout(photoLongPress));
-    });
-
-    // ==================== 彩蛋5：连续点击落款5次 → 秘密入口 🔢 ====================
-    let signatureTapCount = 0;
-    let signatureTapTimer = null;
-    const signatureBox = document.getElementById('signatureBox');
-    if (signatureBox) {
-      signatureBox.style.cursor = 'pointer';
-      function handleSigTap() {
-        signatureTapCount++;
-        // 视觉反馈：闪烁一下落款颜色
-        signatureBox.style.opacity = '0.5';
-        setTimeout(() => { signatureBox.style.opacity = '1'; }, 100);
-        if (signatureTapCount === 1) {
-          signatureTapTimer = setTimeout(() => { signatureTapCount = 0; }, 2000);
-        }
-        if (signatureTapCount >= 5) {
-          clearTimeout(signatureTapTimer);
-          signatureTapCount = 0;
-          const toast = document.getElementById('easterToast');
-          document.getElementById('easterMsg').textContent = '🔑 恭喜你发现了隐藏入口！这是我们的秘密基地，下次更新见 ❤️';
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 3500);
-          confetti({
-            particleCount: 100,
-            spread: 80,
-            origin: { y: 0.5 },
-            colors: ['#C4956A', '#E8D5C4', '#ffd93d', '#ff6b6b', '#a0e7e5'],
-          });
-        }
-      }
-      signatureBox.addEventListener('click', handleSigTap);
-      signatureBox.addEventListener('touchend', handleSigTap);
+    // ==================== 照片记忆：点击💬按钮 ====================
+    const photoMemories = ['记得那天你对着这盘菜拍了五分钟，说"先让手机吃"。','这张照片是我趁你不注意偷拍的，你发现后追了我半条街。','那天阳光特别好，你站在窗边，我觉得整个世界都安静了。','宝宝的小手第一次抓住你的手指，你在产房里哭了。','周末赖床的早上，三个人挤在一张床上，谁也不想起。','你生日那天许愿的样子特别认真，我问你许了什么，你说保密。','这张是带宝宝第一次去公园，你紧张得全程寸步不离。','凌晨三点喂完奶，你累得靠在床头睡着了，我拍下了这一刻。','你第一次成功做出戚风蛋糕，激动得给所有人发了照片。','下雨天你抱着宝宝站在窗前教他认雨滴，我在背后看了好久。','你穿着我的大T恤在家里晃悠，说这是"最舒服的睡衣"。','你给宝宝读绘本的时候，模仿各种动物声音，我在门外笑出声。'];
+    function showPhotoMemory(index) {
+      document.getElementById('easterMsg').textContent = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
+      const toast = document.getElementById('easterToast'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000);
+      confetti({ particleCount: 15, spread: 30, origin: { y: 0.5 }, colors: ['#ff6b6b','#C4956A'], scalar: 0.5, ticks: 60 });
     }
 
-    // ==================== iPhone 添加到桌面提示 ====================
-    (function() {
-      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-      const guide = document.getElementById('pwaGuide');
-      if (guide && isIOS && !isStandalone) {
-        // 在微信中也能看到这个提示
-        guide.style.display = 'block';
-        // 如果是在微信内，更新提示文字
-        if (/MicroMessenger/i.test(navigator.userAgent)) {
-          guide.querySelector('div').innerHTML =
-            '<p class="text-sm text-warm-muted leading-relaxed">📱 <b>iPhone 提示：</b>用 <b>Safari 浏览器</b> 打开此链接<br/>然后点击分享按钮 → <b>「添加到主屏幕」</b><br/>就能像 App 一样随时打开啦 ✨</p>';
+    // ==================== 落款3连击 → 秘密入口 ====================
+    let sigTaps = 0, sigTimer = null;
+    const sigBox = document.getElementById('signatureBox');
+    if (sigBox) {
+      sigBox.addEventListener('click', () => {
+        sigTaps++; sigBox.style.animation = 'none'; sigBox.offsetHeight; sigBox.style.animation = 'bounceSm 0.6s ease-in-out';
+        if (sigTaps === 1) sigTimer = setTimeout(() => { sigTaps = 0; }, 2000);
+        if (sigTaps >= 3) { clearTimeout(sigTimer); sigTaps = 0;
+          document.getElementById('easterMsg').textContent = '🔑 恭喜你发现了隐藏入口！这是我们的秘密基地，下次更新见 ❤️';
+          const toast = document.getElementById('easterToast'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3500);
+          confetti({ particleCount: 100, spread: 80, origin: { y: 0.5 }, colors: ['#C4956A','#E8D5C4','#ffd93d','#ff6b6b','#a0e7e5'] });
         }
-      }
-    })();
-
-    // ==================== 注册 Service Worker ====================
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
       });
     }
+
+    // ==================== 滚动入场 ====================
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } }); }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.animate-slide-left,.animate-slide-right,.animate-scale-in,.animate-fade-up').forEach(el => observer.observe(el));
+
+    function toggleEnvelope() { const env = document.getElementById('envelopeCard'); env.classList.toggle('opened'); if (env.classList.contains('opened')) { const h = env.querySelector('.envelope-hint'); if (h) h.style.display = 'none'; } }
+    const babyBirth = new Date(2024, 3, 4);
+    document.getElementById('babyMonths').textContent = Math.floor((today - babyBirth) / (1000*60*60*24*30.44));
+    document.getElementById('totalMeals').textContent = '~' + Math.floor(daysTogether * 2.8).toLocaleString();
+    document.getElementById('nightFeeds').textContent = '~' + (Math.floor((today - babyBirth) / 86400000) * 6).toLocaleString();
+    document.getElementById('herDays').textContent = daysTogether.toLocaleString();
+
+    // ==================== iPhone 添加到桌面 ====================
+    (function() {
+      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const isSA = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+      const guide = document.getElementById('pwaGuide');
+      if (guide && isIOS && !isSA) { guide.style.display = 'block';
+        if (/MicroMessenger/i.test(navigator.userAgent)) guide.querySelector('div').innerHTML = '<p class="text-sm text-warm-muted leading-relaxed">📱 <b>iPhone 提示：</b>用 <b>Safari 浏览器</b> 打开此链接<br/>然后点击分享按钮 → <b>「添加到主屏幕」</b><br/>就能像 App 一样随时打开啦 ✨</p>';
+      }
+    })();
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   </script>
 </body>
 </html>
