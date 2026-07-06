@@ -438,7 +438,7 @@
       <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📊 我们的生活数字</h2>
       <p class="text-warm-muted">有些数字，只属于我们。</p>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div class="number-card">
         <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="babyMonths">--</p>
         <p class="text-xs text-warm-muted mt-2">宝宝来到世界的<br/>月数</p>
@@ -454,6 +454,10 @@
       <div class="number-card">
         <p class="text-3xl md:text-4xl font-bold text-warm-accent">+1</p>
         <p class="text-xs text-warm-muted mt-2">我们的家庭人口<br/>2 → 3</p>
+      </div>
+      <div class="number-card">
+        <p class="text-3xl md:text-4xl font-bold text-warm-accent" id="herDays">--</p>
+        <p class="text-xs text-warm-muted mt-2">遇见你之后<br/>快乐的日子</p>
       </div>
       <div class="number-card">
         <p class="text-3xl md:text-4xl font-bold text-warm-accent">∞</p>
@@ -785,6 +789,7 @@
     document.getElementById('babyMonths').textContent = babyMonths;
     document.getElementById('totalMeals').textContent = '~' + totalMeals.toLocaleString();
     document.getElementById('nightFeeds').textContent = '~' + nightFeeds.toLocaleString();
+    document.getElementById('herDays').textContent = daysTogether.toLocaleString();
 
     // ==================== 彩蛋1：摇一摇 → 满屏星星 ✨ ====================
     let lastShakeTime = 0;
