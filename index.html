@@ -531,6 +531,17 @@
     </div>
   </section>
 
+  <!-- ==================== iPhone 添加到桌面指引 ==================== -->
+  <section class="py-12 px-6 max-w-md mx-auto text-center" id="pwaGuide" style="display:none;">
+    <div class="bg-warm-soft rounded-2xl p-6">
+      <p class="text-sm text-warm-muted leading-relaxed">
+        📱 <b>iPhone 用户：</b>在 <b>Safari 浏览器</b> 中打开此页面<br/>
+        点击底部中间的 <b>分享按钮 ↑</b> → <b>「添加到主屏幕」</b><br/>
+        就能像 App 一样随时打开啦 ✨
+      </p>
+    </div>
+  </section>
+
   <!-- ==================== 页脚 ==================== -->
   <footer class="py-12 px-6 text-center border-t border-warm-soft">
     <p class="text-xs text-warm-muted mb-2" style="font-family: 'Courier New', monospace;">
@@ -658,17 +669,28 @@
       if (e.key === 'Escape') { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
     });
 
-    // ==================== 蛋糕彩蛋：彩带特效 ====================
+    // ==================== 蛋糕彩蛋：爱心 + 彩带特效 ====================
     document.getElementById('cakeBtn').addEventListener('click', () => {
-      // 爱心 + 彩带混合
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d'] });
+      // 第一波：从蛋糕位置爆发爱心
+      confetti({
+        particleCount: 60,
+        spread: 60,
+        origin: { y: 0.55 },
+        colors: ['#ff6b6b', '#ff8787', '#ff5252', '#ff8a80', '#C4956A'],
+        shapes: [confetti.shapeFromText({ text: '❤️', scalar: 2 })],
+        scalar: 1.2,
+      });
+      // 第二波：彩带
+      setTimeout(() => {
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d'] });
+      }, 150);
       setTimeout(() => {
         confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.3 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b'] });
         confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.7 }, colors: ['#C4956A', '#E8D5C4', '#ffd93d'] });
-      }, 300);
+      }, 400);
       setTimeout(() => {
-        confetti({ particleCount: 150, spread: 100, origin: { y: 0.4 }, decay: 0.94, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
-      }, 600);
+        confetti({ particleCount: 120, spread: 100, origin: { y: 0.4 }, decay: 0.94, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
+      }, 700);
     });
 
     // ==================== 页脚爱心：隐藏情话盲盒 ====================
@@ -766,7 +788,29 @@
 
     // ==================== 彩蛋1：摇一摇 → 满屏星星 ✨ ====================
     let lastShakeTime = 0;
-    const shakeThreshold = 10;
+    const shakeThreshold = 22;
+
+    function fireStars() {
+      const now = Date.now();
+      if (now - lastShakeTime < 2500) return;
+      lastShakeTime = now;
+      // 多波金色星星从底部升起
+      const starColors = ['#FFD700', '#FFA500', '#FFDAB9', '#FFF8DC', '#C4956A', '#FFDF00'];
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            spread: 80,
+            origin: { y: 1.1, x: 0.3 + Math.random() * 0.4 },
+            angle: 270 + (Math.random() - 0.5) * 20,
+            startVelocity: 45 + Math.random() * 20,
+            colors: starColors,
+            scalar: 1.2 + Math.random() * 0.8,
+            ticks: 150,
+          });
+        }, i * 150);
+      }
+    }
 
     function enableShakeListener() {
       window.addEventListener('devicemotion', (e) => {
@@ -777,74 +821,62 @@
           (acc.y || 0) * (acc.y || 0) +
           (acc.z || 0) * (acc.z || 0)
         );
-        const now = Date.now();
-        if (magnitude > shakeThreshold && now - lastShakeTime > 2500) {
-          lastShakeTime = now;
-          confetti({
-            particleCount: 80,
-            spread: 100,
-            origin: { y: 1, x: 0.5 },
-            angle: 270,
-            startVelocity: 40,
-            colors: ['#FFD700', '#FFA500', '#FFDAB9', '#FFF8DC', '#C4956A'],
-            shapes: ['star'],
-            scalar: 1.5,
-          });
-          const toast = document.getElementById('easterToast');
-          document.getElementById('easterMsg').textContent = '✨ 抓到你了！愿你的每一天都闪闪发光 ✨';
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 2500);
-        }
+        if (magnitude > shakeThreshold) fireStars();
       }, { passive: true });
     }
 
+    // 非iOS设备或WeChat中摇一摇可能不生效，提供双击兜底
+    // 已在 touchend 双击中实现
+
     if (window.DeviceMotionEvent) {
-      // iOS 13+ 需要主动请求权限
       if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        // 静默尝试：在首次用户手势后自动请求
-        document.addEventListener('click', function requestShakePerm() {
+        document.addEventListener('click', function reqShake() {
           DeviceMotionEvent.requestPermission()
             .then(state => { if (state === 'granted') enableShakeListener(); })
             .catch(() => {});
-          document.removeEventListener('click', requestShakePerm);
+          document.removeEventListener('click', reqShake);
         }, { once: true });
-        document.addEventListener('touchend', function requestShakePermTouch() {
+        document.addEventListener('touchend', function reqShakeT() {
           DeviceMotionEvent.requestPermission()
             .then(state => { if (state === 'granted') enableShakeListener(); })
             .catch(() => {});
-          document.removeEventListener('touchend', requestShakePermTouch);
+          document.removeEventListener('touchend', reqShakeT);
         }, { once: true });
       } else {
-        // Android 或旧版 iOS，直接启用
         enableShakeListener();
       }
     }
 
-    // ==================== 彩蛋2：长按照片 → 小心心 💕 ====================
+    // ==================== 彩蛋2：长按首屏 → 小心心 💕 ====================
     let longPressTimer;
     const heroSectionEl = document.querySelector('.hero-section');
     if (heroSectionEl) {
       heroSectionEl.addEventListener('contextmenu', (e) => e.preventDefault());
       heroSectionEl.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // 阻止微信默认菜单
         longPressTimer = setTimeout(() => {
-          const touch = e.touches[0] || e.changedTouches[0];
+          const touch = e.touches[0];
           const x = touch ? touch.clientX / window.innerWidth : 0.5;
           const y = touch ? touch.clientY / window.innerHeight : 0.5;
-          confetti({
-            particleCount: 30,
-            spread: 50,
-            origin: { x, y },
-            colors: ['#ff6b6b', '#ff8787', '#ffd6d6', '#C4956A'],
-            shapes: ['circle'],
-            scalar: 0.8,
-            gravity: 0.5,
-            ticks: 100,
-          });
+          // 从手指位置发射小心心
+          for (let i = 0; i < 2; i++) {
+            setTimeout(() => {
+              confetti({
+                particleCount: 20,
+                spread: 40,
+                origin: { x: x + (Math.random() - 0.5) * 0.15, y: y + (Math.random() - 0.5) * 0.15 },
+                colors: ['#ff6b6b', '#ff8787', '#ffd6d6', '#C4956A'],
+                scalar: 0.7,
+                gravity: 0.4,
+                ticks: 80,
+              });
+            }, i * 100);
+          }
           clearTimeout(longPressTimer);
-        }, 1500);
-      });
-      heroSectionEl.addEventListener('touchend', () => clearTimeout(longPressTimer));
-      heroSectionEl.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+        }, 1200);
+      }, { passive: false });
+      heroSectionEl.addEventListener('touchend', (e) => { e.preventDefault(); clearTimeout(longPressTimer); }, { passive: false });
+      heroSectionEl.addEventListener('touchmove', (e) => { e.preventDefault(); clearTimeout(longPressTimer); }, { passive: false });
     }
 
     // ==================== 彩蛋3：滑动到底部 → 烟花 🎆 ====================
@@ -899,25 +931,24 @@
       let photoLongPress;
       item.addEventListener('contextmenu', (e) => e.preventDefault());
       item.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // 阻止微信默认菜单
         photoLongPress = setTimeout(() => {
           const memory = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
           document.getElementById('easterMsg').textContent = memory;
           const toast = document.getElementById('easterToast');
           toast.classList.add('show');
           setTimeout(() => toast.classList.remove('show'), 3000);
-          // 小心心
           confetti({
             particleCount: 20,
             spread: 40,
             origin: { y: 0.5 },
             colors: ['#ff6b6b', '#C4956A'],
-            shapes: ['circle'],
             scalar: 0.6,
           });
-        }, 1200);
-      });
-      item.addEventListener('touchend', () => clearTimeout(photoLongPress));
-      item.addEventListener('touchmove', () => clearTimeout(photoLongPress));
+        }, 1000);
+      }, { passive: false });
+      item.addEventListener('touchend', (e) => { e.preventDefault(); clearTimeout(photoLongPress); }, { passive: false });
+      item.addEventListener('touchmove', (e) => { e.preventDefault(); clearTimeout(photoLongPress); }, { passive: false });
     });
 
     // ==================== 彩蛋5：连续点击落款5次 → 秘密入口 🔢 ====================
@@ -925,8 +956,12 @@
     let signatureTapTimer = null;
     const signatureBox = document.getElementById('signatureBox');
     if (signatureBox) {
-      signatureBox.addEventListener('click', () => {
+      signatureBox.style.cursor = 'pointer';
+      function handleSigTap() {
         signatureTapCount++;
+        // 视觉反馈：闪烁一下落款颜色
+        signatureBox.style.opacity = '0.5';
+        setTimeout(() => { signatureBox.style.opacity = '1'; }, 100);
         if (signatureTapCount === 1) {
           signatureTapTimer = setTimeout(() => { signatureTapCount = 0; }, 2000);
         }
@@ -944,8 +979,26 @@
             colors: ['#C4956A', '#E8D5C4', '#ffd93d', '#ff6b6b', '#a0e7e5'],
           });
         }
-      });
+      }
+      signatureBox.addEventListener('click', handleSigTap);
+      signatureBox.addEventListener('touchend', handleSigTap);
     }
+
+    // ==================== iPhone 添加到桌面提示 ====================
+    (function() {
+      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+      const guide = document.getElementById('pwaGuide');
+      if (guide && isIOS && !isStandalone) {
+        // 在微信中也能看到这个提示
+        guide.style.display = 'block';
+        // 如果是在微信内，更新提示文字
+        if (/MicroMessenger/i.test(navigator.userAgent)) {
+          guide.querySelector('div').innerHTML =
+            '<p class="text-sm text-warm-muted leading-relaxed">📱 <b>iPhone 提示：</b>用 <b>Safari 浏览器</b> 打开此链接<br/>然后点击分享按钮 → <b>「添加到主屏幕」</b><br/>就能像 App 一样随时打开啦 ✨</p>';
+        }
+      }
+    })();
 
     // ==================== 注册 Service Worker ====================
     if ('serviceWorker' in navigator) {
