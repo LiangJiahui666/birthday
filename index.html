@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#C4956A" />
+  <meta name="description" content="老婆30岁生日快乐 - 我们的时光纪念册" />
+  <title>30岁生日快乐 🎂</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            warm: { DEFAULT: '#FEFAF6', dark: '#4A3728', accent: '#C4956A', soft: '#E8D5C4', muted: '#B8956A', light: '#F5EDE3' },
+          },
+          fontFamily: {
+            handwritten: ['"ZCOOL KuaiLe"', '"Ma Shan Zheng"', 'cursive', 'sans-serif'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 1.2s ease-out forwards',
+            'fade-up': 'fadeUp 0.8s ease-out forwards',
+            'breathe': 'breathe 2.5s ease-in-out infinite',
+            'slide-left': 'slideLeft 0.6s ease-out forwards',
+            'slide-right': 'slideRight 0.6s ease-out forwards',
+            'scale-in': 'scaleIn 0.5s ease-out forwards',
+            'float': 'float 3s ease-in-out infinite',
+            'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            fadeUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            breathe: { '0%, 100%': { transform: 'scale(1)', opacity: '0.8' }, '50%': { transform: 'scale(1.08)', opacity: '1' } },
+            slideLeft: { '0%': { opacity: '0', transform: 'translateX(60px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+            slideRight: { '0%': { opacity: '0', transform: 'translateX(-60px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+            scaleIn: { '0%': { opacity: '0', transform: 'scale(0.8)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            pulseSoft: { '0%, 100%': { boxShadow: '0 0 0 0 rgba(196,149,106,0.4)' }, '50%': { boxShadow: '0 0 0 15px rgba(196,149,106,0)' } },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- canvas-confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Google Font: 手写体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>" />
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #FEFAF6; color: #4A3728; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #FEFAF6; }
+    ::-webkit-scrollbar-thumb { background: #C4956A; border-radius: 10px; }
+
+    /* 加载过渡页 */
+    .loading-screen {
+      position: fixed; inset: 0; z-index: 9999; background: #FEFAF6;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loading-bar { width: 200px; height: 3px; background: #E8D5C4; border-radius: 10px; overflow: hidden; margin-top: 24px; }
+    .loading-bar-inner { width: 100%; height: 100%; background: #C4956A; border-radius: 10px; animation: loadingAnim 2s ease-in-out forwards; }
+    @keyframes loadingAnim { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
+
+    /* 首屏 */
+    .hero-section {
+      position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+    }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35)); }
+
+    /* 音乐按钮 */
+    .music-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 500;
+      width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 22px; box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s; user-select: none;
+    }
+    .music-btn.playing { animation: breathe 2.5s ease-in-out infinite; box-shadow: 0 4px 24px rgba(196,149,106,0.35); }
+    .music-btn:active { transform: scale(0.92); }
+
+    /* 时间轴 */
+    .timeline-container { position: relative; }
+    .timeline-line {
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #E8D5C4, #C4956A, #E8D5C4);
+      transform: translateX(-50%);
+    }
+    .timeline-dot {
+      width: 16px; height: 16px; border-radius: 50%; background: #C4956A; flex-shrink: 0;
+      box-shadow: 0 0 0 6px rgba(196,149,106,0.15); z-index: 1; position: relative;
+    }
+    .timeline-card {
+      background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .timeline-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    .timeline-card.expanded .timeline-detail { max-height: 600px; opacity: 1; margin-top: 16px; }
+    .timeline-detail { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.4s ease, margin 0.4s ease; }
+
+    /* 照片九宫格 */
+    .grid-item {
+      position: relative; overflow: hidden; border-radius: 12px; cursor: pointer;
+      aspect-ratio: 1; transition: transform 0.3s;
+    }
+    .grid-item:hover { transform: scale(1.03); }
+    .grid-item img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* 灯箱 */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 8000; background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .lightbox.active { opacity: 1; visibility: visible; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 8px; object-fit: contain; }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px; color: white; font-size: 32px;
+      cursor: pointer; z-index: 10; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    }
+    .lightbox-prev, .lightbox-next {
+      position: absolute; top: 50%; transform: translateY(-50%); color: white; font-size: 28px;
+      cursor: pointer; z-index: 10; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.15); border-radius: 50%; transition: background 0.3s;
+    }
+    .lightbox-prev:active, .lightbox-next:active { background: rgba(255,255,255,0.3); }
+    .lightbox-prev { left: 12px; }
+    .lightbox-next { right: 12px; }
+
+    /* 彩蛋弹窗 */
+    .easter-egg-toast {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+      background: white; padding: 24px 36px; border-radius: 20px; z-index: 9000;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center;
+      opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 85vw;
+    }
+    .easter-egg-toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+
+    /* 倒计时 */
+    .countdown-item {
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); border-radius: 12px;
+      padding: 12px 16px; text-align: center; min-width: 64px;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .timeline-line { left: 20px; }
+      .timeline-card { margin-left: 40px !important; margin-right: 0 !important; }
+      /* 手机端左右交替改为统一左侧 */
+      .timeline-container > div { flex-direction: row !important; justify-content: flex-start !important; }
+      .timeline-container > div > .timeline-card { width: 100% !important; text-align: left !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== 加载过渡页 ==================== -->
+  <div class="loading-screen" id="loadingScreen">
+    <p class="text-warm-accent text-lg" style="letter-spacing: 2px;">正在加载我们的故事...</p>
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  </div>
+
+  <!-- ==================== 音乐播放器（隐藏） ==================== -->
+  <audio id="bgMusic" loop preload="none" src="music/song.mp3"></audio>
+
+  <!-- ==================== 音乐开关按钮 ==================== -->
+  <div class="music-btn" id="musicBtn" title="点击播放音乐">🎵</div>
+
+  <!-- ==================== 模块1：首屏开场 ==================== -->
+  <section class="hero-section" id="hero" style="background-image: url('images/01-hero.jpg');">
+    <div class="hero-overlay"></div>
+    <div class="relative z-10 text-center text-white px-6 w-full max-w-lg">
+      <!-- 倒计时 -->
+      <div id="countdownSection" class="flex justify-center gap-3 mb-8">
+        <div class="countdown-item"><div class="text-2xl font-bold" id="cdDays">--</div><div class="text-xs opacity-80 mt-1">天</div></div>
+        <div class="countdown-item"><div class="text-2xl font-bold" id="cdHours">--</div><div class="text-xs opacity-80 mt-1">时</div></div>
+        <div class="countdown-item"><div class="text-2xl font-bold" id="cdMins">--</div><div class="text-xs opacity-80 mt-1">分</div></div>
+        <div class="countdown-item"><div class="text-2xl font-bold" id="cdSecs">--</div><div class="text-xs opacity-80 mt-1">秒</div></div>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-bold mb-3 animate-fade-in leading-relaxed" style="text-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+        欢迎来到老婆的<br/>30岁小宇宙 ✨
+      </h1>
+      <p class="text-lg md:text-xl mb-10 opacity-90 animate-fade-in" style="animation-delay: 0.4s; text-shadow: 0 1px 8px rgba(0,0,0,0.3);">
+        2026.07.22 | 生日快乐
+      </p>
+      <a href="#timeline" class="inline-block px-8 py-3 rounded-full border-2 border-white/60 text-white font-medium
+        animate-breathe cursor-pointer hover:bg-white/10 transition-colors no-underline"
+        style="text-shadow: 0 1px 6px rgba(0,0,0,0.3);">
+        开启我们的时光 ↓
+      </a>
+      <!-- 向下滚动提示 -->
+      <p class="text-sm opacity-50 mt-6 animate-float">向下滑动</p>
+    </div>
+  </section>
+
+  <!-- ==================== 模块2：时光轴 ==================== -->
+  <section id="timeline" class="py-20 px-4 md:px-8 max-w-3xl mx-auto">
+    <!-- 动态天数 -->
+    <div class="text-center mb-16">
+      <p class="text-warm-accent text-lg md:text-xl font-medium animate-fade-up">
+        从领证那天到今天，我们已经一起走过了
+      </p>
+      <p class="text-5xl md:text-6xl font-bold text-warm-accent my-3 animate-scale-in" id="daysCount" style="animation-delay: 0.3s;">
+        --
+      </p>
+      <p class="text-warm-muted">天</p>
+    </div>
+
+    <!-- 时间轴 -->
+    <div class="timeline-container relative">
+      <div class="timeline-line"></div>
+
+      <!-- 节点1：领证 -->
+      <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-end;">
+        <div class="timeline-card flex-1 max-w-md animate-slide-right" onclick="toggleTimelineCard(this)"
+          style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">📜</span>
+            <div>
+              <p class="font-bold text-warm-dark">2022.03.26</p>
+              <p class="text-sm text-warm-muted">合法伴侣</p>
+            </div>
+          </div>
+          <div class="timeline-detail">
+            <img src="images/02-lingzheng.jpg" alt="领证那天" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
+            <p class="text-sm text-warm-muted leading-relaxed">
+              那天阳光很好，红本本上的我们都笑得有点傻。<br/>从这天起，人生多了一个并肩同行的人。
+            </p>
+          </div>
+        </div>
+        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
+      </div>
+
+      <!-- 节点2：婚礼 -->
+      <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-start;">
+        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
+        <div class="timeline-card flex-1 max-w-md animate-slide-left"
+          onclick="toggleTimelineCard(this)" style="animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">💒</span>
+            <div>
+              <p class="font-bold text-warm-dark">2022.10.03</p>
+              <p class="text-sm text-warm-muted">我们的婚礼</p>
+            </div>
+          </div>
+          <div class="timeline-detail">
+            <img src="images/03-hunli.jpg" alt="婚礼那天" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
+            <p class="text-sm text-warm-muted leading-relaxed">
+              你穿着婚纱站在光里的样子，是我见过最美的画面。<br/>那天我在心里说，要一辈子对你好。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 节点3：宝宝出生 -->
+      <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-end;">
+        <div class="timeline-card flex-1 max-w-md animate-slide-right"
+          onclick="toggleTimelineCard(this)" style="animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">👶</span>
+            <div>
+              <p class="font-bold text-warm-dark">2024.04.04</p>
+              <p class="text-sm text-warm-muted">小家伙报到</p>
+            </div>
+          </div>
+          <div class="timeline-detail">
+            <img src="images/04-baby.jpg" alt="宝宝出生" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
+            <p class="text-sm text-warm-muted leading-relaxed">
+              我们的小天使降临了。<br/>我见过你初为妈妈的脆弱，更懂你藏在温柔里的勇敢。
+            </p>
+          </div>
+        </div>
+        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
+      </div>
+
+      <!-- 节点4：30岁生日 -->
+      <div class="flex items-start gap-6 mb-12 relative" style="justify-content: flex-start;">
+        <div class="timeline-dot absolute left-1/2 -translate-x-1/2 mt-2" style="top: 8px;"></div>
+        <div class="timeline-card flex-1 max-w-md animate-slide-left"
+          onclick="toggleTimelineCard(this)" style="animation-delay: 0.7s; opacity: 0; animation-fill-mode: forwards;">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🎂</span>
+            <div>
+              <p class="font-bold text-warm-dark">2026.07.22</p>
+              <p class="text-sm text-warm-muted">我的女孩30岁啦</p>
+            </div>
+          </div>
+          <div class="timeline-detail">
+            <img src="images/05-birthday.jpg" alt="30岁生日快乐" class="w-full rounded-lg mt-3 mb-3 object-cover" style="max-height: 300px;" loading="lazy" />
+            <p class="text-sm text-warm-muted leading-relaxed">
+              30岁的你，是妻子，是妈妈，但更是你自己。<br/>愿你永远自在明亮，永远被爱包围。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 模块3：日常碎片照片墙 ==================== -->
+  <section class="py-20 px-4 md:px-8 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📸 日常碎片</h2>
+      <p class="text-warm-muted">那些平淡无奇的日常，都是我藏在心里的星光。</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" id="photoGrid">
+      <!-- 9张占位照片，点击后灯箱查看 -->
+      <div class="grid-item" onclick="openLightbox(0)"><img src="images/06-daily-1.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(1)"><img src="images/07-daily-2.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(2)"><img src="images/08-daily-3.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(3)"><img src="images/09-daily-4.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(4)"><img src="images/10-daily-5.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(5)"><img src="images/11-daily-6.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(6)"><img src="images/12-daily-7.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(7)"><img src="images/13-daily-8.jpg" alt="日常碎片" loading="lazy" /></div>
+      <div class="grid-item" onclick="openLightbox(8)"><img src="images/14-daily-9.jpg" alt="日常碎片" loading="lazy" /></div>
+    </div>
+
+    <!-- 灯箱 -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+      <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+      <div class="lightbox-prev" onclick="event.stopPropagation(); lightboxNav(-1)">‹</div>
+      <img src="" alt="" id="lightboxImg" />
+      <div class="lightbox-next" onclick="event.stopPropagation(); lightboxNav(1)">›</div>
+    </div>
+  </section>
+
+  <!-- ==================== 模块4：心里话 ==================== -->
+  <section class="py-20 px-6 md:px-8 max-w-2xl mx-auto text-center" style="background: linear-gradient(to bottom, #FEFAF6, #F5EDE3);">
+    <div class="font-handwritten">
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
+        写了这么多年代码，修了数不清的 <span style="color:#C4956A;">bug</span>，<br/>
+        我人生中最幸运的 <span style="color:#C4956A;">commit</span>，是娶你回家。
+      </p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
+        这几年我们一起搭建了我们的小家，<br/>迎来了我们的小朋友。
+      </p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
+        我知道你很辛苦，<br/>也知道你为这个家付出了多少。
+      </p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
+        30岁不是分水岭，<br/>是你更精彩人生的开始。
+      </p>
+      <p class="text-xl md:text-2xl leading-loose mb-6 text-warm-dark">
+        你永远可以放心做你自己，<br/>我和宝宝永远是你最坚实的后盾。
+      </p>
+      <p class="text-2xl md:text-3xl font-bold mt-10 text-warm-accent">
+        生日快乐，我的女孩。❤️
+      </p>
+    </div>
+
+    <!-- 蛋糕彩蛋 -->
+    <div class="mt-16 cursor-pointer inline-block" id="cakeBtn" title="点击有惊喜">
+      <span class="text-6xl md:text-7xl animate-float inline-block select-none">🎂</span>
+      <p class="text-sm text-warm-muted mt-2">点一下蛋糕试试~</p>
+    </div>
+
+    <!-- 落款 -->
+    <div class="mt-16 text-warm-muted text-sm leading-relaxed">
+      <p>爱你的老公 &amp; 你的小男子汉</p>
+      <p>2026.07.22</p>
+    </div>
+  </section>
+
+  <!-- ==================== 模块5：未来留言板 ==================== -->
+  <section class="py-20 px-6 max-w-lg mx-auto text-center">
+    <div class="bg-white rounded-2xl p-8 shadow-sm">
+      <p class="text-3xl mb-4">📝</p>
+      <p class="text-warm-dark font-medium mb-2">留给未来的空白页</p>
+      <p class="text-sm text-warm-muted leading-relaxed">
+        每一年我都会在这里写下新的心里话。<br/>
+        这是我们的线上时光纪念册，<br/>
+        未完待续...
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== 页脚 ==================== -->
+  <footer class="py-12 px-6 text-center border-t border-warm-soft">
+    <p class="text-xs text-warm-muted mb-2" style="font-family: 'Courier New', monospace;">
+      &lt;!-- Made with ❤️ by 老公 --&gt;
+    </p>
+    <p class="text-xs text-warm-muted">
+      <span class="cursor-pointer select-none" id="footerHeart" title="❤️">❤️</span>
+    </p>
+  </footer>
+
+  <!-- ==================== 彩蛋弹窗 ==================== -->
+  <div class="easter-egg-toast" id="easterToast">
+    <p class="text-4xl mb-3">💌</p>
+    <p class="text-lg text-warm-dark font-handwritten" id="easterMsg"></p>
+  </div>
+
+  <!-- ==================== 生日歌彩蛋提示 ==================== -->
+  <div class="easter-egg-toast" id="birthdayToast">
+    <p class="text-4xl mb-3">🎵</p>
+    <p class="text-lg text-warm-dark font-handwritten">Happy Birthday to You~ 🎂</p>
+  </div>
+
+  <script>
+    // ==================== 加载过渡页 ====================
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hidden');
+      }, 2200);
+    });
+
+    // ==================== 音乐控制 ====================
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        bgMusic.pause();
+        musicBtn.textContent = '🎵';
+        musicBtn.classList.remove('playing');
+      } else {
+        bgMusic.play().then(() => {
+          musicBtn.textContent = '🎶';
+          musicBtn.classList.add('playing');
+        }).catch(() => { /* 忽略播放失败 */ });
+      }
+      isPlaying = !isPlaying;
+    });
+
+    bgMusic.addEventListener('play', () => { isPlaying = true; musicBtn.textContent = '🎶'; musicBtn.classList.add('playing'); });
+    bgMusic.addEventListener('pause', () => { isPlaying = false; musicBtn.textContent = '🎵'; musicBtn.classList.remove('playing'); });
+
+    // ==================== 倒计时（距离7月22日） ====================
+    function updateCountdown() {
+      const now = new Date();
+      const birthday = new Date(now.getFullYear(), 6, 22, 0, 0, 0); // 7月22日
+
+      // 如果今年的生日已过，算明年的
+      if (now > birthday) {
+        birthday.setFullYear(birthday.getFullYear() + 1);
+      }
+
+      const diff = birthday - now;
+
+      if (diff <= 0) {
+        document.getElementById('countdownSection').innerHTML =
+          '<p class="text-2xl font-bold animate-scale-in" style="text-shadow: 0 2px 12px rgba(0,0,0,0.3);">🎉 今天就是你的30岁生日！ 🎉</p>';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+      document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+      document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ==================== 天数计算（从领证到今天） ====================
+    const marriageDate = new Date(2022, 2, 26); // 2022.03.26
+    const today = new Date();
+    const daysTogether = Math.floor((today - marriageDate) / (1000 * 60 * 60 * 24));
+    document.getElementById('daysCount').textContent = daysTogether.toLocaleString();
+
+    // ==================== 时间轴展开/收起 ====================
+    function toggleTimelineCard(card) {
+      card.classList.toggle('expanded');
+    }
+
+    // ==================== 照片灯箱 ====================
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const gridItems = document.querySelectorAll('#photoGrid .grid-item img');
+    const photoSrcs = Array.from(gridItems).map(img => img.src);
+    let currentPhotoIndex = 0;
+
+    function openLightbox(index) {
+      currentPhotoIndex = index;
+      lightboxImg.src = photoSrcs[index];
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(e) {
+      if (e && e.target !== lightbox && e.target !== lightboxImg) return;
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function lightboxNav(direction) {
+      currentPhotoIndex = (currentPhotoIndex + direction + photoSrcs.length) % photoSrcs.length;
+      lightboxImg.src = photoSrcs[currentPhotoIndex];
+    }
+
+    // 键盘左右切换灯箱照片
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'ArrowLeft') lightboxNav(-1);
+      if (e.key === 'ArrowRight') lightboxNav(1);
+      if (e.key === 'Escape') { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
+    });
+
+    // ==================== 蛋糕彩蛋：彩带特效 ====================
+    document.getElementById('cakeBtn').addEventListener('click', () => {
+      // 爱心 + 彩带混合
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d'] });
+      setTimeout(() => {
+        confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.3 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b'] });
+        confetti({ particleCount: 50, spread: 120, origin: { y: 0.5, x: 0.7 }, colors: ['#C4956A', '#E8D5C4', '#ffd93d'] });
+      }, 300);
+      setTimeout(() => {
+        confetti({ particleCount: 150, spread: 100, origin: { y: 0.4 }, decay: 0.94, colors: ['#C4956A', '#E8D5C4', '#FEFAF6', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
+      }, 600);
+    });
+
+    // ==================== 页脚爱心：隐藏情话盲盒 ====================
+    const loveNotes = [
+      '写过几百行代码，最完美的参数，是你的名字。',
+      '你是我人生中唯一不需要 debug 的存在。',
+      'if (you === happy) { me.happy = true; }',
+      '你一笑，我的整个世界都亮了。',
+      '和你在一起的日子，每一帧都舍不得快进。',
+      '这个世界很大，但有你和宝宝的地方就是家。',
+      '余生很长，但我只想和你一起浪费。',
+    ];
+
+    document.getElementById('footerHeart').addEventListener('click', () => {
+      const randomNote = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+      document.getElementById('easterMsg').textContent = randomNote;
+      const toast = document.getElementById('easterToast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    });
+
+    // ==================== 键盘彩蛋：srkl → 生日歌 ====================
+    let keyBuffer = '';
+    const birthdaySongAudio = new Audio('music/song.mp3');
+    birthdaySongAudio.loop = false;
+
+    document.addEventListener('keydown', (e) => {
+      keyBuffer += e.key.toLowerCase();
+      if (keyBuffer.length > 4) keyBuffer = keyBuffer.slice(-4);
+
+      if (keyBuffer === 'srkl') {
+        keyBuffer = '';
+        // 显示生日歌弹窗
+        const toast = document.getElementById('birthdayToast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+
+        // 播放生日歌
+        birthdaySongAudio.currentTime = 0;
+        birthdaySongAudio.play().catch(() => {});
+
+        // 彩带
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b', '#ffd93d', '#a0e7e5'] });
+      }
+    });
+
+    // ==================== 手机端双击触发生日歌彩蛋 ====================
+    let lastTap = 0;
+    document.addEventListener('touchend', (e) => {
+      // 忽略交互元素上的双击
+      if (e.target.closest('button, a, .grid-item, .timeline-card, .music-btn, #cakeBtn, #footerHeart, .lightbox')) return;
+
+      const now = Date.now();
+      if (now - lastTap < 400) {
+        const toast = document.getElementById('birthdayToast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+        birthdaySongAudio.currentTime = 0;
+        birthdaySongAudio.play().catch(() => {});
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 }, colors: ['#C4956A', '#E8D5C4', '#ff6b6b', '#ffd93d'] });
+      }
+      lastTap = now;
+    });
+
+    // ==================== 滚动动画：元素进入视口时触发 ====================
+    const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-slide-left, .animate-slide-right, .animate-scale-in, .animate-fade-up').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ==================== 注册 Service Worker ====================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
