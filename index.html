@@ -62,6 +62,7 @@
     body {
       background-color: #FEFAF6; color: #4A3728; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+      touch-action: manipulation;
     }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #FEFAF6; }
@@ -858,12 +859,11 @@
     if (heroSectionEl) {
       heroSectionEl.addEventListener('contextmenu', (e) => e.preventDefault());
       heroSectionEl.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // 阻止微信默认菜单
+        // 记录起始位置，不阻止默认行为，保证滚动和点击正常
         longPressTimer = setTimeout(() => {
           const touch = e.touches[0];
           const x = touch ? touch.clientX / window.innerWidth : 0.5;
           const y = touch ? touch.clientY / window.innerHeight : 0.5;
-          // 从手指位置发射小心心
           for (let i = 0; i < 2; i++) {
             setTimeout(() => {
               confetti({
@@ -879,9 +879,9 @@
           }
           clearTimeout(longPressTimer);
         }, 1200);
-      }, { passive: false });
-      heroSectionEl.addEventListener('touchend', (e) => { e.preventDefault(); clearTimeout(longPressTimer); }, { passive: false });
-      heroSectionEl.addEventListener('touchmove', (e) => { e.preventDefault(); clearTimeout(longPressTimer); }, { passive: false });
+      }, { passive: true });
+      heroSectionEl.addEventListener('touchend', () => clearTimeout(longPressTimer));
+      heroSectionEl.addEventListener('touchmove', () => clearTimeout(longPressTimer));
     }
 
     // ==================== 彩蛋3：滑动到底部 → 烟花 🎆 ====================
@@ -936,7 +936,6 @@
       let photoLongPress;
       item.addEventListener('contextmenu', (e) => e.preventDefault());
       item.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // 阻止微信默认菜单
         photoLongPress = setTimeout(() => {
           const memory = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
           document.getElementById('easterMsg').textContent = memory;
@@ -951,9 +950,9 @@
             scalar: 0.6,
           });
         }, 1000);
-      }, { passive: false });
-      item.addEventListener('touchend', (e) => { e.preventDefault(); clearTimeout(photoLongPress); }, { passive: false });
-      item.addEventListener('touchmove', (e) => { e.preventDefault(); clearTimeout(photoLongPress); }, { passive: false });
+      }, { passive: true });
+      item.addEventListener('touchend', () => clearTimeout(photoLongPress));
+      item.addEventListener('touchmove', () => clearTimeout(photoLongPress));
     });
 
     // ==================== 彩蛋5：连续点击落款5次 → 秘密入口 🔢 ====================
