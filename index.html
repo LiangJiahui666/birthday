@@ -94,17 +94,11 @@
     .timeline-detail { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.4s ease, margin 0.4s ease; }
     .number-card { background: white; border-radius: 16px; padding: 20px 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.3s; }
     .number-card:hover { transform: translateY(-4px); }
-    .notes-scroll { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 8px 4px 20px; }
-    .notes-scroll::-webkit-scrollbar { display: none; }
-    .note-card { flex: 0 0 260px; scroll-snap-align: center; background: #FFF9F0; border-radius: 16px; padding: 24px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); position: relative; min-height: 160px; display: flex; align-items: center; }
-    .note-card::before { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 48px; height: 8px; background: #C4956A; border-radius: 4px; opacity: 0.5; }
-    .note-card:nth-child(odd) { background: #FFF9F0; }
-    .note-card:nth-child(even) { background: #F5EDE3; }
     .envelope { background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%); border-radius: 20px; padding: 40px 28px; position: relative; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08); text-align: center; cursor: pointer; transition: transform 0.3s; }
     .envelope:hover { transform: scale(1.02); }
     .envelope-seal { display: inline-block; background: #C4956A; color: white; padding: 6px 20px; border-radius: 20px; font-size: 14px; margin-bottom: 16px; }
     .envelope-content { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.5s ease; }
-    .envelope.opened .envelope-content { max-height: 500px; opacity: 1; margin-top: 20px; }
+    .envelope.opened .envelope-content { max-height: 900px; opacity: 1; margin-top: 20px; }
     .grid-item { position: relative; overflow: hidden; border-radius: 12px; cursor: pointer; aspect-ratio: 1; transition: transform 0.3s; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .grid-item:hover { transform: scale(1.03); }
     .grid-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: auto; }
@@ -160,7 +154,7 @@
 
   <section id="timeline" class="py-20 px-4 md:px-8 max-w-3xl mx-auto">
     <div class="text-center mb-16">
-      <p class="text-warm-accent text-lg md:text-xl font-medium animate-fade-up">从领证那天到今天，我们已经一起走过了</p>
+      <p class="text-warm-accent text-lg md:text-xl font-medium animate-fade-up">从 2017 年在一起到今天，我们已经相恋了</p>
       <p class="text-5xl md:text-6xl font-bold text-warm-accent my-3 animate-scale-in" id="daysCount" style="animation-delay: 0.3s;">--</p>
       <p class="text-warm-muted">天</p>
     </div>
@@ -232,41 +226,29 @@
   <section class="py-20 px-4 md:px-8 max-w-3xl mx-auto">
     <div class="text-center mb-12"><h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">📊 我们的生活数字</h2><p class="text-warm-muted">有些数字，只属于我们。</p></div>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="babyMonths">--</p><p class="text-xs text-warm-muted mt-2">宝宝来到世界的<br/>月数</p></div>
-      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="totalMeals">--</p><p class="text-xs text-warm-muted mt-2">一起吃过<br/>大约的饭数</p></div>
-      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="nightFeeds">--</p><p class="text-xs text-warm-muted mt-2">你大概起来<br/>喂奶的次数</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">3,489</p><p class="text-xs text-warm-muted mt-2">从 2017.01.01<br/>相恋至今的天数</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">1,579</p><p class="text-xs text-warm-muted mt-2">从领证那天<br/>一路走来的日子</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">1,388</p><p class="text-xs text-warm-muted mt-2">从婚礼到今天<br/>并肩同行的光阴</p></div>
       <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">+1</p><p class="text-xs text-warm-muted mt-2">我们的家庭人口<br/>2 → 3</p></div>
-      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent" id="herDays">--</p><p class="text-xs text-warm-muted mt-2">遇见你之后<br/>快乐的日子</p></div>
+      <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">839</p><p class="text-xs text-warm-muted mt-2">小可可来到<br/>这个世界</p></div>
       <div class="number-card"><p class="text-3xl md:text-4xl font-bold text-warm-accent">∞</p><p class="text-xs text-warm-muted mt-2">未来还有<br/>无限可能</p></div>
-    </div>
-  </section>
-
-  <section class="py-20 px-4 max-w-4xl mx-auto" style="background: linear-gradient(to bottom, #FEFAF6, #FFF9F0);">
-    <div class="text-center mb-10"><h2 class="text-2xl md:text-3xl font-bold text-warm-dark mb-3">👀 我偷偷记住的事</h2><p class="text-warm-muted text-sm">有些小事，你可能以为我没注意到。← 左右滑动 →</p></div>
-    <div class="notes-scroll">
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你总是把宝宝的衣服叠成小豆腐块，整整齐齐码在小柜子里。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你喝奶茶一定要加珍珠，从来不加椰果。点错了你会默默喝完，但下次还是会说"珍珠"。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你生气的时候先不说话，自己消化完了再来找我。我在旁边大气都不敢出。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你给家里每个人都买了各自的专属拖鞋——你的粉色，我的灰色，宝宝的迷你款。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你哄宝宝睡觉的时候会轻声哼歌，旋律每次都差不多，但调子永远不准。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你每次出门前要在镜子前站很久，最后转一圈问我"还行吗"。其实你永远最美。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你手机相册里宝宝的照片比你自己多一百倍，但偶尔翻到自己的自拍会偷偷删掉。</p></div>
-      <div class="note-card"><p class="text-warm-dark leading-relaxed">你做的番茄鸡蛋面是全天下最好吃的。每次加班回家，闻到那个味道就觉得到家了。</p></div>
     </div>
   </section>
 
   <section class="py-20 px-6 max-w-lg mx-auto">
     <div class="envelope" id="envelopeCard" onclick="toggleEnvelope()">
-      <div class="envelope-seal">📮 来自 2026.07.22 的一封信</div><p class="text-xs text-warm-muted mb-4">将于 2027.07.22 开启</p>
+      <div class="envelope-seal">📮 来自 2026.07.22 的一封信</div><p class="text-xs text-warm-muted mb-4">写给你的 30 岁</p>
       <div class="envelope-content"><div class="font-handwritten">
         <p class="text-lg leading-loose mb-4 text-warm-dark">亲爱的老婆：</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">明年的今天，当我们再次打开这个页面时，<br/>不知又会是怎样的光景呢？</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">宝宝可能已经会跑会跳，<br/>追在你后面喊"妈妈"了。</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">我们可能换了新家，<br/>或者去了计划好久的那趟旅行。</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">但有一件事我敢打包票——<br/>我仍然会像今天一样，</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">坐在这里给你写新的代码，<br/>拍你吃饭时沾在嘴角的米粒，</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">在你累的时候接过宝宝，<br/>在你笑的时候偷偷按下快门。</p>
-        <p class="text-xl font-bold mt-6 text-warm-accent">明年今日，不见不散。❤️</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">我见过你最美的样子——穿着婚纱朝我走来的那个瞬间，你的眼睛里有星星，全世界都在发光。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">后来我们有了可可。从那天起，你好像把自己弄丢了。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">可可晚上睡不踏实，你一趟趟起来，抱着他在地上来回走着哄。我有时候迷迷糊糊听见你的脚步声，翻个身又睡过去。第二天早上看见你眼下的乌青，你笑着说"没事，习惯了"。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">为了喂奶，你说等断奶再说减肥。你的化妆品落了灰，衣柜里很久没添新衣服，包包还是结婚前那个。有时候路过商场橱窗，你多看两眼的那个包，我后来去买，你已经说不想要了。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">现在可可慢慢大了，你又开始操心他将来上什么幼儿园、学什么兴趣班。你的人生好像永远在替别人考虑——先是替我想，然后是替儿子想。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">老婆，可可已经两岁多了，他已经会跑会跳，会追在后面脆生生地喊"妈妈"。他也慢慢开始有自己的小世界了。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">所以我想跟你说——能不能，偶尔也替自己想一下？</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">我知道你是可可的妈妈，是我的妻子。这些身份永远不会变。<br/>但在这之前，你先是你自己。<br/>是那个会为自己换一个新发型臭美半天的女孩，是那个在镜子前转来转去问我"还行吗"的姑娘。</p>
+        <p class="text-xl font-bold mt-6 text-warm-accent">30 岁了，老婆。<br/>别再弄丢自己了。</p>
         <p class="text-sm text-warm-muted mt-4">—— 爱你的老公，2026.07.22</p>
       </div></div>
       <p class="text-sm text-warm-muted mt-4 envelope-hint">👆 点一下拆开信封</p>
@@ -275,10 +257,6 @@
 
   <section class="py-20 px-6 max-w-lg mx-auto text-center">
     <div class="bg-white rounded-2xl p-8 shadow-sm"><p class="text-3xl mb-4">📝</p><p class="text-warm-dark font-medium mb-2">留给未来的空白页</p><p class="text-sm text-warm-muted leading-relaxed">每一年我都会在这里写下新的心里话。<br/>这是我们的线上时光纪念册，<br/>未完待续...</p></div>
-  </section>
-
-  <section class="py-12 px-6 max-w-md mx-auto text-center" id="pwaGuide" style="display:none;">
-    <div class="bg-warm-soft rounded-2xl p-6"><p class="text-sm text-warm-muted leading-relaxed">📱 <b>iPhone 用户：</b>在 <b>Safari 浏览器</b> 中打开此页面<br/>点击底部中间的 <b>分享按钮 ↑</b> → <b>「添加到主屏幕」</b><br/>就能像 App 一样随时打开啦 ✨</p></div>
   </section>
 
   <footer class="py-12 px-6 text-center border-t border-warm-soft">
@@ -315,9 +293,9 @@
     }
     updateCountdown(); setInterval(updateCountdown, 1000);
 
-    const marriageDate = new Date(2022, 2, 26);
+    const loveDate = new Date(2017, 0, 1);
     const today = new Date();
-    const daysTogether = Math.floor((today - marriageDate) / 86400000);
+    const daysTogether = Math.floor((today - loveDate) / 86400000);
     document.getElementById('daysCount').textContent = daysTogether.toLocaleString();
 
     function toggleTimelineCard(card) { card.classList.toggle('expanded'); }
@@ -378,7 +356,20 @@
     });
 
     // ==================== 照片记忆：点击💬按钮 ====================
-    const photoMemories = ['记得那天你对着这盘菜拍了五分钟，说"先让手机吃"。','这张照片是我趁你不注意偷拍的，你发现后追了我半条街。','那天阳光特别好，你站在窗边，我觉得整个世界都安静了。','宝宝的小手第一次抓住你的手指，你在产房里哭了。','周末赖床的早上，三个人挤在一张床上，谁也不想起。','你生日那天许愿的样子特别认真，我问你许了什么，你说保密。','这张是带宝宝第一次去公园，你紧张得全程寸步不离。','凌晨三点喂完奶，你累得靠在床头睡着了，我拍下了这一刻。','你第一次成功做出戚风蛋糕，激动得给所有人发了照片。','下雨天你抱着宝宝站在窗前教他认雨滴，我在背后看了好久。','你穿着我的大T恤在家里晃悠，说这是"最舒服的睡衣"。','你给宝宝读绘本的时候，模仿各种动物声音，我在门外笑出声。'];
+    const photoMemories = [
+      '婚礼第二天，你换了新发型，说这叫"从头做人"。你在婚房里对着镜子拍了好久，臭美又可爱，我偷偷在背后看了半天。',
+      '我们终于搬进了属于自己的家，在西安这座城市里，有一颗亮着灯的窗是我们的。那天你站在门口，我按下快门，记录下这个新的开始。',
+      '在我们的家里，你给我过了第一个生日。那天蛋糕很甜，但没你的笑甜。这一张自拍里，藏着我对这个家全部的归属感。',
+      '去大舅哥家看刚出生的小侄女，你抱着她不撒手。看你低头逗她的样子，我悄悄在想——你心里，是不是也有了一个小小的愿望？',
+      '这是我们婚后第一次长途自驾旅行，坐着缆车往上爬的时候，朋友喊了一声"回头"，就拍下了这一张。风吹着你的头发，那天的阳光也特别好。',
+      '在我们的家里，轮到我给你过生日了。鲜花、蛋糕和你，取景框里的一切都刚刚好。你低头许愿的时候，我在心里也许了一个。',
+      '你怀孕了。那天晚上你一边泡脚一边抱着肚子笑，说感觉自己像个企鹅。水汽氤氲里，我突然觉得，你比任何时候都好看。',
+      '肚子一天天大起来，你在镜子前转来转去，说自己胖了。可是这张照片里的你，明明是我见过最温柔的样子。',
+      '可可百日宴，我们第一次以一家三口的身份站在镜头前。你抱着他，我搂着你，这张照片我后来看了很久——这就是我想要的全世界。',
+      '可可一岁了。你挺着腰酸背痛，满屋子贴气球、挂彩旗，就想给儿子一个像样的生日。站在你布置的背景墙前，我们三个人笑得很开心，但我知道你有多累。',
+      '有了孩子之后，我们已经很久没有出来旅行了。那晚你说想吃夜市摊，我跑下楼买了炸鸡、冷面、臭豆腐。你坐在酒店床边大口吃着，说"好久没过这种日子了"。我偷偷拍下你和夜宵的合影，心里有点酸。',
+      '今年过年，你抱着可可站在窗边。窗外有烟花，屋里有灯光，我站在你们身后，按下了快门。那一刻我觉得——这就是幸福，就在我眼前。',
+    ];
     function showPhotoMemory(index) {
       document.getElementById('easterMsg').textContent = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
       const toast = document.getElementById('easterToast'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000);
@@ -405,21 +396,7 @@
     document.querySelectorAll('.animate-slide-left,.animate-slide-right,.animate-scale-in,.animate-fade-up').forEach(el => observer.observe(el));
 
     function toggleEnvelope() { const env = document.getElementById('envelopeCard'); env.classList.toggle('opened'); if (env.classList.contains('opened')) { const h = env.querySelector('.envelope-hint'); if (h) h.style.display = 'none'; } }
-    const babyBirth = new Date(2024, 3, 4);
-    document.getElementById('babyMonths').textContent = Math.floor((today - babyBirth) / (1000*60*60*24*30.44));
-    document.getElementById('totalMeals').textContent = '~' + Math.floor(daysTogether * 2.8).toLocaleString();
-    document.getElementById('nightFeeds').textContent = '~' + (Math.floor((today - babyBirth) / 86400000) * 6).toLocaleString();
-    document.getElementById('herDays').textContent = daysTogether.toLocaleString();
 
-    // ==================== iPhone 添加到桌面 ====================
-    (function() {
-      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-      const isSA = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-      const guide = document.getElementById('pwaGuide');
-      if (guide && isIOS && !isSA) { guide.style.display = 'block';
-        if (/MicroMessenger/i.test(navigator.userAgent)) guide.querySelector('div').innerHTML = '<p class="text-sm text-warm-muted leading-relaxed">📱 <b>iPhone 提示：</b>用 <b>Safari 浏览器</b> 打开此链接<br/>然后点击分享按钮 → <b>「添加到主屏幕」</b><br/>就能像 App 一样随时打开啦 ✨</p>';
-      }
-    })();
     if ('serviceWorker' in navigator) window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   </script>
 </body>
