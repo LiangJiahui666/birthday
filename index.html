@@ -98,7 +98,7 @@
     .envelope:hover { transform: scale(1.02); }
     .envelope-seal { display: inline-block; background: #C4956A; color: white; padding: 6px 20px; border-radius: 20px; font-size: 14px; margin-bottom: 16px; }
     .envelope-content { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.5s ease; }
-    .envelope.opened .envelope-content { max-height: 900px; opacity: 1; margin-top: 20px; }
+    .envelope.opened .envelope-content { max-height: 2000px; opacity: 1; margin-top: 20px; overflow-y: auto; }
     .grid-item { position: relative; overflow: hidden; border-radius: 12px; cursor: pointer; aspect-ratio: 1; transition: transform 0.3s; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .grid-item:hover { transform: scale(1.03); }
     .grid-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: auto; }
@@ -247,7 +247,7 @@
         <p class="text-lg leading-loose mb-4 text-warm-dark">现在可可慢慢大了，你又开始操心他将来上什么幼儿园、学什么兴趣班。你的人生好像永远在替别人考虑——先是替我想，然后是替儿子想。</p>
         <p class="text-lg leading-loose mb-4 text-warm-dark">老婆，可可已经两岁多了，他已经会跑会跳，会追在后面脆生生地喊"妈妈"。他也慢慢开始有自己的小世界了。</p>
         <p class="text-lg leading-loose mb-4 text-warm-dark">所以我想跟你说——能不能，偶尔也替自己想一下？</p>
-        <p class="text-lg leading-loose mb-4 text-warm-dark">我知道你是可可的妈妈，是我的妻子。这些身份永远不会变。<br/>但在这之前，你先是你自己。<br/>是那个会为自己换一个新发型臭美半天的女孩，是那个在镜子前转来转去问我"还行吗"的姑娘。</p>
+        <p class="text-lg leading-loose mb-4 text-warm-dark">我知道你是可可的妈妈，是我的妻子。这些身份永远不会变。<br/>但在这之前，你先是你自己。<br/>是那个会为自己换一件新衣服臭美半天的女孩，是那个在镜子前转来转去问我"还行吗"的姑娘。</p>
         <p class="text-xl font-bold mt-6 text-warm-accent">30 岁了，老婆。<br/>别再弄丢自己了。</p>
         <p class="text-sm text-warm-muted mt-4">—— 爱你的老公，2026.07.22</p>
       </div></div>
@@ -358,17 +358,17 @@
     // ==================== 照片记忆：点击💬按钮 ====================
     const photoMemories = [
       '婚礼第二天，你换了新发型，说这叫"从头做人"。你在婚房里对着镜子拍了好久，臭美又可爱，我偷偷在背后看了半天。',
-      '我们终于搬进了属于自己的家，在西安这座城市里，有一颗亮着灯的窗是我们的。那天你站在门口，我按下快门，记录下这个新的开始。',
+      '我们终于搬进了属于自己的家，在西安这座城市里，有一扇亮着灯的窗是我们的。那天你站在门口，我按下快门，记录下这个新的开始。',
       '在我们的家里，你给我过了第一个生日。那天蛋糕很甜，但没你的笑甜。这一张自拍里，藏着我对这个家全部的归属感。',
-      '去大舅哥家看刚出生的小侄女，你抱着她不撒手。看你低头逗她的样子，我悄悄在想——你心里，是不是也有了一个小小的愿望？',
-      '这是我们婚后第一次长途自驾旅行，坐着缆车往上爬的时候，朋友喊了一声"回头"，就拍下了这一张。风吹着你的头发，那天的阳光也特别好。',
+      '去咱哥家看刚出生的小侄女，你抱着她不撒手。看你低头逗她的样子，我在想——你心里，是不是也有一个小小的愿望呢？',
+      '这是我们婚后第一次长途自驾旅行，坐着缆车往上爬的时候，朋友拍下了这一张，那天的阳光很好，心情更好。',
       '在我们的家里，轮到我给你过生日了。鲜花、蛋糕和你，取景框里的一切都刚刚好。你低头许愿的时候，我在心里也许了一个。',
-      '你怀孕了。那天晚上你一边泡脚一边抱着肚子笑，说感觉自己像个企鹅。水汽氤氲里，我突然觉得，你比任何时候都好看。',
+      '你怀孕了。那天晚上你一边泡脚一边抱着肚子笑，说感觉自己像个企鹅（其实我是企鹅，哈哈哈）。那一刻，我突然觉得，你比任何时候都好看。',
       '肚子一天天大起来，你在镜子前转来转去，说自己胖了。可是这张照片里的你，明明是我见过最温柔的样子。',
-      '可可百日宴，我们第一次以一家三口的身份站在镜头前。你抱着他，我搂着你，这张照片我后来看了很久——这就是我想要的全世界。',
-      '可可一岁了。你挺着腰酸背痛，满屋子贴气球、挂彩旗，就想给儿子一个像样的生日。站在你布置的背景墙前，我们三个人笑得很开心，但我知道你有多累。',
-      '有了孩子之后，我们已经很久没有出来旅行了。那晚你说想吃夜市摊，我跑下楼买了炸鸡、冷面、臭豆腐。你坐在酒店床边大口吃着，说"好久没过这种日子了"。我偷偷拍下你和夜宵的合影，心里有点酸。',
-      '今年过年，你抱着可可站在窗边。窗外有烟花，屋里有灯光，我站在你们身后，按下了快门。那一刻我觉得——这就是幸福，就在我眼前。',
+      '可可百日宴，我们以一家三口的身份站在镜头前。你抱着他，我搂着你，这张照片我后来看了很久——这就是我想要的全世界呀。',
+      '可可一岁了。你挺着腰酸背痛，贴气球、挂彩旗，就想给儿子一个像样的生日。站在你布置的背景墙前，我们三个人笑得很开心，但我知道你有多累。',
+      '有了孩子之后，我们已经很久没有出来旅行了。那晚你说想吃夜市摊，我跑下楼买了炸鸡、冷面、臭豆腐。你坐在酒店床边大口吃着，说"好久没过这种日子了"。我拍下你和夜宵的合影，心里有点酸。',
+      '今年过年，你抱着可可站在窗边。窗上有福，屋里有光，我站在你们身后，按下了快门。那一刻我觉得——这就是幸福，就在我眼前。',
     ];
     function showPhotoMemory(index) {
       document.getElementById('easterMsg').textContent = photoMemories[index] || '有些瞬间，不需要语言，光是看着就觉得幸福。';
